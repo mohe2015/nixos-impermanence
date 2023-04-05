@@ -45,6 +45,7 @@ in
         ".local/share/kscreen" # start on external screen by default
         ".local/share/konsole" # profile with infinite scrollback
         ".ssh"
+        ".local/share/flatpak"
       ];
       files = [
       ];
@@ -57,6 +58,7 @@ in
     hideMounts = true;
     directories = [
       "/etc/nixos"
+      "/var/lib/flatpak"
     ];
     files = [
       "/etc/machine-id"
@@ -156,6 +158,8 @@ in
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+
+  services.flatpak.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
