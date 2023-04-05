@@ -52,6 +52,11 @@ in
         ".local/share/flatpak"
         ".var/app"
         ".bash_history"
+
+        # found using
+        # systemctl --user stop pipewire.service
+        # systemctl --user stop pipewire-pulse.service
+        ".local/state/wireplumber" # restore audio volumes
       ];
       files = [
         ".config/konsolerc" # set default profile
@@ -72,7 +77,7 @@ in
       "/var/lib/systemd/coredump"
       "/var/lib/flatpak"
       "/var/lib/bluetooth"
-      "/var/lib/alsa"
+      #"/var/lib/alsa"
     ];
     files = [
       "/etc/machine-id"
@@ -161,7 +166,12 @@ in
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
+  # /etc/udev/rules.d/90-alsa-restore.rules
+  # udevadm test /sys/class/sound/card0/controlC0/
+  # udevadm test /sys/class/sound/card1/controlC1/
+  # https://github.com/NixOS/nixpkgs/issues/54387
+  # works:
+  # sudo /nix/store/9r1y944h5vwq661qd5698ydq09m7ywi8-alsa-utils-1.2.8/sbin/alsactl restore 1
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
