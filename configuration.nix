@@ -43,7 +43,8 @@ in
         "Videos"
         ".mozilla"
         ".local/share/kscreen" # start on external screen by default
-        ".local/share/konsole/" # profile with infinite scrollback
+        ".local/share/konsole" # profile with infinite scrollback
+        ".ssh"
       ];
       files = [
       ];
@@ -58,6 +59,7 @@ in
       "/etc/nixos"
     ];
     files = [
+      "/etc/machine-id"
       "/crypto_keyfile.bin"
     ];
   };
@@ -86,7 +88,20 @@ in
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
-  networking.networkmanager.enable = true;
+  networking = {
+    useDHCP = false;
+    useNetworkd = true;
+  };
+  systemd.network = {
+    networks = {
+      "40-enp1s0" = {
+        name = "enp1s0";
+        DHCP = "yes";
+      };
+    };
+  };
+  # TODO FIXME home wifi
+  # TODO FIXME eduroam https://github.com/mohe2015/nixos/blob/main/hosts/nixos.nix
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
