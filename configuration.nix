@@ -51,7 +51,7 @@ in
         ".ssh"
         ".local/share/flatpak"
         ".var/app"
-        ".config/VSCodium"
+        ".bash_history"
       ];
       files = [
         ".config/konsolerc" # set default profile
@@ -67,6 +67,9 @@ in
     hideMounts = true;
     directories = [
       "/etc/nixos"
+      "/var/lib/nixos"
+      "/var/log"
+      "/var/lib/systemd/coredump"
       "/var/lib/flatpak"
       "/var/lib/bluetooth"
       "/var/lib/alsa"
