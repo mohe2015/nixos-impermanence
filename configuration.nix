@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
@@ -14,7 +14,11 @@ in
       ./hardware-configuration.nix
       (import "${home-manager}/nixos")
       "${impermanence}/nixos.nix"
-    ];  
+    ];
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "steam-original"
+  ];
 
   programs.fuse.userAllowOther = true;
 
@@ -31,7 +35,7 @@ in
       };
     };
 
-    home.packages = [ pkgs.vscodium pkgs.git ];
+    home.packages = [ pkgs.git ];
 
     home.persistence."/nix/persistent/home/moritz" = {
       allowOther = true;
@@ -46,11 +50,13 @@ in
         ".local/share/konsole" # profile with infinite scrollback
         ".ssh"
         ".local/share/flatpak"
-        ".var/app/com.valvesoftware.Steam"
+        ".var/app"
         ".config/VSCodium"
       ];
       files = [
         ".config/konsolerc" # set default profile
+        ".config/plasma-org.kde.plasma.desktop-appletsrc" # taskbar pins
+        ".gtkrc-2.0" # dark theme
       ];
     };
 
@@ -70,6 +76,8 @@ in
       "/crypto_keyfile.bin"
     ];
   };
+
+  hardware.steam-hardware.enable = true;
 
   hardware.enableRedistributableFirmware = true;
 
@@ -175,12 +183,7 @@ in
   users.users.moritz = {
     isNormalUser = true;
     description = "Moritz Hedtke";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      firefox
-      kate
-    #  thunderbird
-    ];
+    extraGroups = [ "wheel" ];
     initialHashedPassword = "$6$sUGOG4y2bxFFFsKS$EwMnQ0.qI/BsLCuMZ17bWreafcHfFLr/LDdjHpVBIoLHCu93nZKJAiedmXYyn3vU6f9watzoOgmuBKJMn4U/f/";
   };
 
