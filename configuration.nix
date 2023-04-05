@@ -46,8 +46,11 @@ in
         ".local/share/konsole" # profile with infinite scrollback
         ".ssh"
         ".local/share/flatpak"
+        ".var/app/com.valvesoftware.Steam"
+        ".config/VSCodium"
       ];
       files = [
+        ".config/konsolerc" # set default profile
       ];
     };
 
@@ -59,6 +62,8 @@ in
     directories = [
       "/etc/nixos"
       "/var/lib/flatpak"
+      "/var/lib/bluetooth"
+      "/var/lib/alsa"
     ];
     files = [
       "/etc/machine-id"
@@ -122,6 +127,8 @@ in
     LC_TELEPHONE = "de_DE.UTF-8";
     LC_TIME = "de_DE.UTF-8";
   };
+
+  hardware.bluetooth.enable = true;
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
