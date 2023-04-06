@@ -16,6 +16,15 @@ in
       "${impermanence}/nixos.nix"
     ];
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+#  services.packagekit.enable = true;
+# services.packagekit.settings = {
+#Daemon = {
+#          DefaultBackend = "test_nop";
+#        };
+#};
+services.fwupd.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "steam-original"
   ];
@@ -125,6 +134,7 @@ in
   };
   # TODO FIXME home wifi
   # TODO FIXME eduroam https://github.com/mohe2015/nixos/blob/main/hosts/nixos.nix
+  
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
