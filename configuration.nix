@@ -12,12 +12,18 @@
       impermanence.nixosModules.impermanence
     ];
 
+  # don't hang the whole network
+  # https://discourse.nixos.org/t/system-autoupgrade-nearly-halts-my-system-even-though-nixos-rebuild-doesnt/23820/3
+  nix.daemonCPUSchedPolicy = "idle";
+  nix.daemonIOSchedClass = "idle";
+  nix.daemonIOSchedPriority = 7;
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   services.fwupd.enable = true;
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "steam-original"
+    "steam" "steam-original" "discord"
   ];
 
   programs.fuse.userAllowOther = true;
@@ -43,9 +49,10 @@
       # needed for krisp and without its bad
       pkgs.discord
       pkgs.gimp
-      pkgs.libreoffice
+      pkgs.libreoffice-fresh
       pkgs.thunderbird
       pkgs.vscodium
+      pkgs.bubblewrap
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
