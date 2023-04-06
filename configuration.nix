@@ -23,10 +23,12 @@
   services.fwupd.enable = true;
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "steam" "steam-original" "discord"
+    "steam" "steam-original" "steam-run" "discord"
   ];
 
   programs.fuse.userAllowOther = true;
+
+  programs.steam.enable = true;
 
   home-manager.users.moritz = {
     home.homeDirectory = "/home/moritz";
@@ -44,8 +46,6 @@
     home.packages = [
       pkgs.git
       pkgs.firefox
-      # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/programs/steam.nix
-      pkgs.steam
       # needed for krisp and without its bad
       pkgs.discord
       pkgs.gimp
@@ -53,6 +53,7 @@
       pkgs.thunderbird
       pkgs.vscodium
       pkgs.bubblewrap
+      pkgs.chromium
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -166,6 +167,7 @@
 
   # Configure keymap in X11
   services.xserver = {
+    enable = true;
     layout = "de";
     xkbVariant = "";
   };
