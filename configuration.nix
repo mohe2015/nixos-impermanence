@@ -2,18 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, home-manager, impermanence, ... }:
 
-let
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
-  impermanence = builtins.fetchTarball "https://github.com/nix-community/impermanence/archive/master.tar.gz";
-in
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      (import "${home-manager}/nixos")
-      "${impermanence}/nixos.nix"
+      home-manager.nixosModule
+      impermanence.nixosModules.impermanence
     ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -33,7 +29,7 @@ services.fwupd.enable = true;
 
   home-manager.users.moritz = {
     home.homeDirectory = "/home/moritz";
-    imports = [ "${impermanence}/home-manager.nix" ];
+    imports = [ impermanence.nixosModules.home-manager.impermanence ];
 
     programs = {
       home-manager.enable = true;
