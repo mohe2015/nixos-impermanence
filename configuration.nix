@@ -84,12 +84,14 @@
         ".config/VSCodium" # "config"
         ".vscode-oss"
         ".steam"
+        ".local/share/Steam"
         ".thunderbird"
       ];
       files = [
         ".config/konsolerc" # set default profile
         ".config/plasma-org.kde.plasma.desktop-appletsrc" # taskbar pins
         ".gtkrc-2.0" # dark theme
+        ".config/mimeapps.list" # default applications
         ".cache/nix-index/files"
       ];
     };
