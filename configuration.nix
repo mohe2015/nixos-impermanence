@@ -14,13 +14,8 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-#  services.packagekit.enable = true;
-# services.packagekit.settings = {
-#Daemon = {
-#          DefaultBackend = "test_nop";
-#        };
-#};
-services.fwupd.enable = true;
+  services.fwupd.enable = true;
+
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "steam-original"
   ];
@@ -40,7 +35,18 @@ services.fwupd.enable = true;
       };
     };
 
-    home.packages = [ pkgs.git ];
+    home.packages = [
+      pkgs.git
+      pkgs.firefox
+      # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/programs/steam.nix
+      pkgs.steam
+      # needed for krisp and without its bad
+      pkgs.discord
+      pkgs.gimp
+      pkgs.libreoffice
+      pkgs.thunderbird
+      pkgs.vscodium
+    ];
 
     home.persistence."/nix/persistent/home/moritz" = {
       allowOther = true;
@@ -54,8 +60,6 @@ services.fwupd.enable = true;
         ".local/share/kscreen" # start on external screen by default
         ".local/share/konsole" # profile with infinite scrollback
         ".ssh"
-        ".local/share/flatpak"
-        ".var/app"
         ".bash_history"
 
         # found using
@@ -80,7 +84,6 @@ services.fwupd.enable = true;
       "/var/lib/nixos"
       "/var/log"
       "/var/lib/systemd/coredump"
-      "/var/lib/flatpak"
       "/var/lib/bluetooth"
       #"/var/lib/alsa"
     ];
@@ -89,8 +92,6 @@ services.fwupd.enable = true;
       "/crypto_keyfile.bin"
     ];
   };
-
-  hardware.steam-hardware.enable = true;
 
   hardware.enableRedistributableFirmware = true;
 
@@ -130,7 +131,6 @@ services.fwupd.enable = true;
   };
   # TODO FIXME home wifi
   # TODO FIXME eduroam https://github.com/mohe2015/nixos/blob/main/hosts/nixos.nix
-  
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -185,15 +185,7 @@ services.fwupd.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
-
-  services.flatpak.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -207,23 +199,6 @@ services.fwupd.enable = true;
   };
 
   users.mutableUsers = false;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
-  ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
