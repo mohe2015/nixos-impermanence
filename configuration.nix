@@ -12,6 +12,8 @@
       impermanence.nixosModules.impermanence
     ];
 
+  programs.command-not-found.enable = false;
+
   # don't hang the whole network
   # https://discourse.nixos.org/t/system-autoupgrade-nearly-halts-my-system-even-though-nixos-rebuild-doesnt/23820/3
   nix.daemonCPUSchedPolicy = "idle";
@@ -41,7 +43,9 @@
         userName  = "Moritz Hedtke";
         userEmail = "Moritz.Hedtke@t-online.de";
       };
+      nix-index.enable = true;
     };
+
 
     home.packages = [
       pkgs.git
@@ -74,11 +78,19 @@
         # systemctl --user stop pipewire.service
         # systemctl --user stop pipewire-pulse.service
         ".local/state/wireplumber" # restore audio volumes
+        ".local/state/home-manager"
+        ".config/discord" # "config"
+        ".mozilla"
+        ".config/VSCodium" # "config"
+        ".vscode-oss"
+        ".steam"
+        ".thunderbird"
       ];
       files = [
         ".config/konsolerc" # set default profile
         ".config/plasma-org.kde.plasma.desktop-appletsrc" # taskbar pins
         ".gtkrc-2.0" # dark theme
+        ".cache/nix-index/files"
       ];
     };
 
