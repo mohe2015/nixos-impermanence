@@ -8,7 +8,7 @@ https://git.sr.ht/~fgaz/nix-bubblewrap/tree/master/item/nix-bwrap.tcl
 
 https://github.com/containers/bubblewrap
 
-bwrap --unshare-all --unshare-user --disable-userns --assert-userns-disabled --clearenv --new-session --die-with-parent --dev-bind / / /nix/store/6yv5wvi1xi2n034r046xdzqnkhsh90f9-home-manager-path/bin/Discord
+bwrap --unshare-all --clearenv --new-session --die-with-parent --dev-bind / / /nix/store/6yv5wvi1xi2n034r046xdzqnkhsh90f9-home-manager-path/bin/Discord
 
 https://github.com/valoq/bwscripts/blob/master/profiles/signal-desktop
 
