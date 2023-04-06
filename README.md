@@ -48,6 +48,5 @@ bwrap \
     --setenv FONTCONFIG_PATH /etc/fonts \
     /nix/store/9cm9481zw3zjd4jhp1d53cfbnliy4m8b-system-path/bin/strace -e 'trace=!clock_gettime,poll,write,futex,recvmsg,sendto,read,sendmsg,fallocate,ftruncate,gettimeofday,munmap,close,newfstatat,lseek,getpid,fcntl,dup,uname,madvise,mmap,socketpair,getpriority,gettid,mprotect,rt_sigprocmask,clone3,eventfd2,prlimit64,getegid,getuid,getgid,listen,getdents64,pread64,pwrite64,geteuid,pipe2,inotify_init' /nix/store/39d1qwkrdm00fvcp6l0znkq7kz8bvyrz-home-manager-path/bin/chromium --enable-features=UseOzonePlatform --ozone-platform=wayland
 
+bwrap --dev-bind / / /nix/store/39d1qwkrdm00fvcp6l0znkq7kz8bvyrz-home-manager-path/bin/chromium --enable-features=UseOzonePlatform --ozone-platform=wayland
 
-
-bwrap --dev-bind / / /nix/store/39d1qwkrdm00fvcp6l0znkq7kz8bvyrz-home-manager-path/bin/chromium
