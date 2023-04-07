@@ -60,7 +60,6 @@
     home.packages = [
       pkgs.git
       pkgs.firefox
-      # needed for krisp and without its bad
       pkgs.discord
       pkgs.gimp
       pkgs.libreoffice-fresh
@@ -68,6 +67,7 @@
       pkgs.vscodium
       pkgs.bubblewrap
       pkgs.chromium
+      pkgs.rustup
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -113,6 +113,7 @@
 
   environment.persistence."/nix/persistent" = {
     hideMounts = true;
+    enableDebugging = true;
     directories = [
       "/etc/nixos"
       "/var/lib/nixos"
