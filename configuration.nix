@@ -12,6 +12,8 @@
       impermanence.nixosModules.impermanence
     ];
 
+  programs.dconf.enable = true;
+
   programs.command-not-found.enable = false;
 
   # don't hang the whole network
@@ -35,6 +37,14 @@
   home-manager.users.moritz = {
     home.homeDirectory = "/home/moritz";
     imports = [ impermanence.nixosModules.home-manager.impermanence ];
+
+    home.sessionVariables = {
+      QT_QPA_PLATFORM = "wayland";
+      CLUTTER_BACKEND = "wayland";
+      SDL_VIDEODRIVER = "wayland";
+    };
+
+    services.easyeffects.enable = true;
 
     programs = {
       home-manager.enable = true;
@@ -86,6 +96,8 @@
         ".steam"
         ".local/share/Steam"
         ".thunderbird"
+        ".rustup"
+        ".config/easyeffects"
       ];
       files = [
         ".config/konsolerc" # set default profile
@@ -107,7 +119,6 @@
       "/var/log"
       "/var/lib/systemd/coredump"
       "/var/lib/bluetooth"
-      #"/var/lib/alsa"
     ];
     files = [
       "/etc/machine-id"
