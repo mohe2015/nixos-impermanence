@@ -12,6 +12,13 @@
       impermanence.nixosModules.impermanence
     ];
 
+  virtualisation = {
+    podman = {
+      enable = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+  };
+
   programs.dconf.enable = true;
 
   programs.command-not-found.enable = false;
@@ -67,7 +74,6 @@
       pkgs.vscodium
       pkgs.bubblewrap
       pkgs.chromium
-      pkgs.rustup
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -96,8 +102,8 @@
         ".steam"
         ".local/share/Steam"
         ".thunderbird"
-        ".rustup"
         ".config/easyeffects"
+        ".local/share/containers"
       ];
       files = [
         ".config/konsolerc" # set default profile
