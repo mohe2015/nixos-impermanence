@@ -12,6 +12,10 @@
       impermanence.nixosModules.impermanence
     ];
 
+      boot.kernel.sysctl."vm.swappiness" = 1;
+
+  services.flatpak.enable = true;
+
   virtualisation = {
     podman = {
       enable = true;
@@ -126,6 +130,7 @@
       "/var/log"
       "/var/lib/systemd/coredump"
       "/var/lib/bluetooth"
+      "/var/lib/flatpak"
     ];
     files = [
       "/etc/machine-id"
@@ -150,7 +155,7 @@
   boot.initrd.luks.devices."luks-c29ff28a-c246-42b7-b1ea-0c3c8d58cc4f".keyFile = "/crypto_keyfile.bin";
 
   networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -159,13 +164,17 @@
   # Enable networking
   networking = {
     useDHCP = false;
-    useNetworkd = true;
   };
+  systemd.network.enable = true;
   systemd.network = {
     networks = {
-      "40-enp1s0" = {
-        name = "enp1s0";
-        DHCP = "yes";
+      "40-enp" = {
+        matchConfig.Name = "enp*";
+        networkConfig.DHCP = "yes";
+      };
+      "40-bnep" = {
+        matchConfig.Name = "bnep*";
+        networkConfig.DHCP = "yes";
       };
     };
   };

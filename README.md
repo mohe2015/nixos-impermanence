@@ -1,3 +1,5 @@
+dbus-send --system --type=method_call --dest=org.bluez /org/bluez/hci0/dev_84_CF_BF_8E_61_6B org.bluez.Network1.Connect string:'nap'
+
 
 nix run github:bennofs/nix-index#nix-index
 nix run github:bennofs/nix-index#nix-locate -- bin/hello
