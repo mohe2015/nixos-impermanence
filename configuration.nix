@@ -106,6 +106,7 @@
         ".steam"
         ".local/share/Steam"
         ".thunderbird"
+        ".config/chromium/"
         ".config/easyeffects"
         ".local/share/containers"
       ];
