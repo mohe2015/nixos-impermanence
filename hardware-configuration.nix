@@ -16,7 +16,13 @@
   fileSystems."/" = {
     device = "none";
     fsType = "tmpfs";
-    options = [ "defaults" "size=16G" "mode=755" ];
+    options = [ "size=16G" "mode=755" ];
+  };
+
+  fileSystems."/home/moritz" = {
+    device = "none";
+    fsType = "tmpfs";
+    options = [ "size=16G" "mode=777" ];
   };
 
   fileSystems."/nix" =
