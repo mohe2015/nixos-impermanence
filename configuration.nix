@@ -155,7 +155,25 @@
   boot.initrd.luks.devices."luks-c29ff28a-c246-42b7-b1ea-0c3c8d58cc4f".keyFile = "/crypto_keyfile.bin";
 
   networking.hostName = "nixos"; # Define your hostname.
-  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.wireless = {
+    enable = true;
+    environmentFile = "/nix/persistent/eduroam";
+    networks = {
+      eduroam = {
+        auth=''
+        ssid="eduroam"
+        key_mgmt=WPA-EAP
+        eap=PEAP
+        identity="@IDENTITY@"
+        password="@PASSWORD@"
+        domain_suffix_match="radius.hrz.tu-darmstadt.de"
+        anonymous_identity="eduroam@tu-darmstadt.de"
+        phase2="auth=MSCHAPV2"
+        ca_cert="/etc/ssl/certs/ca-bundle.crt"
+        '';
+      };
+    };
+  };
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -172,6 +190,10 @@
     networks = {
       "40-enp" = {
         matchConfig.Name = "enp*";
+        networkConfig.DHCP = "yes";
+      };
+      "40-wlp" = {
+        matchConfig.Name = "wlp*";
         networkConfig.DHCP = "yes";
       };
       "40-bnep" = {
