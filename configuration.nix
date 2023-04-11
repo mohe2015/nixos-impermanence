@@ -155,7 +155,7 @@
   boot.initrd.luks.devices."luks-c29ff28a-c246-42b7-b1ea-0c3c8d58cc4f".keyFile = "/crypto_keyfile.bin";
 
   networking.hostName = "nixos"; # Define your hostname.
-  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -166,6 +166,8 @@
     useDHCP = false;
   };
   systemd.network.enable = true;
+  systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
+  systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
   systemd.network = {
     networks = {
       "40-enp" = {
