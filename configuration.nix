@@ -108,12 +108,15 @@
         ".thunderbird"
         ".config/chromium/"
         ".config/easyeffects"
-        ".local/share/containers"
+        ".cargo"
+        { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
         ".config/konsolerc" # set default profile
         ".config/plasma-org.kde.plasma.desktop-appletsrc" # taskbar pins
         ".gtkrc-2.0" # dark theme
+        ".config/kcminputrc" # touchpad tap to click
+        ".config/baloofilerc" # disable baloo
         ".config/mimeapps.list" # default applications
         ".cache/nix-index/files"
       ];

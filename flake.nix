@@ -4,7 +4,7 @@
     url = "github:nix-community/home-manager";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  inputs.impermanence.url = git+file:impermanence;
+  inputs.impermanence.url = "github:nix-community/impermanence";
   
   outputs = { self, nixpkgs, ... }@attrs: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
