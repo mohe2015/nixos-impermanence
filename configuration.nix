@@ -78,6 +78,7 @@
       pkgs.vscodium
       pkgs.bubblewrap
       pkgs.chromium
+      pkgs.tor-browser-bundle-bin
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
