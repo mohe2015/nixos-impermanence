@@ -109,6 +109,7 @@
         ".config/chromium/"
         ".config/easyeffects"
         ".cargo"
+        ".local/share/tor-browser"
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
