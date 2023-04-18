@@ -56,6 +56,7 @@
     };
 
     services.easyeffects.enable = true;
+    services.flameshot.enable = true;
 
     programs = {
       home-manager.enable = true;
@@ -129,7 +130,6 @@
 
   environment.persistence."/nix/persistent" = {
     hideMounts = true;
-    enableDebugging = true;
     directories = [
       "/etc/nixos"
       "/var/lib/nixos"
