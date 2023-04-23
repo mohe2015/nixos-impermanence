@@ -80,6 +80,8 @@
       pkgs.bubblewrap
       pkgs.chromium
       pkgs.tor-browser-bundle-bin
+      pkgs.texstudio
+      pkgs.texlive.combined.scheme-full
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
