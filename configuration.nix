@@ -12,6 +12,8 @@
       impermanence.nixosModules.impermanence
     ];
 
+boot.kernelPackages = pkgs.linuxPackages_latest;
+
       boot.kernel.sysctl."vm.swappiness" = 1;
 
   services.flatpak.enable = true;
@@ -82,6 +84,7 @@
       pkgs.tor-browser-bundle-bin
       pkgs.texstudio
       pkgs.texlive.combined.scheme-full
+      pkgs.signal-desktop
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -114,6 +117,7 @@
         ".config/easyeffects"
         ".cargo"
         ".local/share/tor-browser"
+        ".config/Signal"
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
