@@ -59,6 +59,10 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
 
     services.easyeffects.enable = true;
     services.flameshot.enable = true;
+    services.kdeconnect = {
+      enable = true;
+      indicator = true;
+    };
 
     programs = {
       home-manager.enable = true;
@@ -288,8 +292,14 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ ];
+  networking.firewall.allowedTCPPortRanges = [
+    { from = 1714; to = 1764; } # KDE Connect
+  ];
+  networking.firewall.allowedUDPPortRanges = [
+    { from = 1714; to = 1764; } # KDE Connect
+  ];
+  networking.firewall.allowedUDPPorts = [ ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
