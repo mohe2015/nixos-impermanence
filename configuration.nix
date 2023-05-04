@@ -18,6 +18,13 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.flatpak.enable = true;
 
+ virtualisation.docker.enable = true;
+
+#virtualisation.docker.rootless = {
+#  enable = true;
+#  setSocketVariable = true;
+#};
+
   virtualisation = {
     podman = {
       enable = true;
@@ -110,6 +117,7 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
         # systemctl --user stop pipewire-pulse.service
         ".local/state/wireplumber" # restore audio volumes
         ".local/state/home-manager"
+        ".local/share/docker"
         ".config/discord" # "config"
         ".mozilla"
         ".config/VSCodium" # "config"
@@ -282,7 +290,7 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
   users.users.moritz = {
     isNormalUser = true;
     description = "Moritz Hedtke";
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "docker" ];
     initialHashedPassword = "$6$sUGOG4y2bxFFFsKS$EwMnQ0.qI/BsLCuMZ17bWreafcHfFLr/LDdjHpVBIoLHCu93nZKJAiedmXYyn3vU6f9watzoOgmuBKJMn4U/f/";
   };
 
