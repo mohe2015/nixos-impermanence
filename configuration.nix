@@ -96,6 +96,11 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
       pkgs.texstudio
       pkgs.texlive.combined.scheme-full
       pkgs.signal-desktop
+      pkgs.xournalpp
+      pkgs.rustup
+      pkgs.gcc
+      pkgs.pdfgrep
+      pkgs.openjdk19
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -128,6 +133,7 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
         ".config/chromium/"
         ".config/easyeffects"
         ".cargo"
+        ".rustup"
         ".local/share/tor-browser"
         ".config/Signal"
         { directory = ".local/share/containers"; method = "symlink"; }
