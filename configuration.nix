@@ -12,6 +12,8 @@
       impermanence.nixosModules.impermanence
     ];
 
+services.gitlab-runner.enable = true;
+
 boot.kernelPackages = pkgs.linuxPackages_latest;
 
       boot.kernel.sysctl."vm.swappiness" = 1;
