@@ -27,9 +27,16 @@
         # `CI_SERVER_URL`
         # `REGISTRATION_TOKEN`
         registrationConfigFile = "/nix/persistent/gitlab-runner";
-        registrationFlags = [ "--cache-dir /var/lib/gitlab-runner/.gitlab-runner/cache" ];
-        dockerVolumes = [ "/var/lib/gitlab-runner/.gitlab-runner/cache:/cache:rw" ];
         dockerImage = "debian:stable";
+        # https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-runnerscache-section
+        registrationFlags = [ "--cache-type=s3" "--cache-shared=true" "--cache-s3-server-address=192.168.2.140:9000"
+      #  "--cache-path=/var/lib/gitlab-runner/.gitlab-runner/cache"
+        "--docker-network-mode=host"
+        "--cache-s3-access-key=minioadmin"
+        "--cache-s3-secret-key=minioadmin"
+        "--cache-s3-bucket-name=test"
+        "--cache-s3-insecure=true"
+        ];
       };
     };
   };
