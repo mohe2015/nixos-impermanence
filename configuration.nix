@@ -6,26 +6,46 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
       home-manager.nixosModule
       impermanence.nixosModules.impermanence
     ];
 
-services.gitlab-runner.enable = true;
+  services.minio = {
+    enable = true;
+  };
+  services.gitlab-runner = {
+    enable = true;
+    settings = {
+      concurrent = 50;
+    };
+    services = {
+      default = {
+        # File should contain at least these two variables:
+        # `CI_SERVER_URL`
+        # `REGISTRATION_TOKEN`
+        registrationConfigFile = "/nix/persistent/gitlab-runner";
+        registrationFlags = [ "--cache-dir /var/lib/gitlab-runner/.gitlab-runner/cache" ];
+        dockerVolumes = [ "/var/lib/gitlab-runner/.gitlab-runner/cache:/cache:rw" ];
+        dockerImage = "debian:stable";
+      };
+    };
+  };
 
-boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
-      boot.kernel.sysctl."vm.swappiness" = 1;
+  boot.kernel.sysctl."vm.swappiness" = 1;
 
   services.flatpak.enable = true;
 
- virtualisation.docker.enable = true;
+  virtualisation.docker.enable = true;
 
-#virtualisation.docker.rootless = {
-#  enable = true;
-#  setSocketVariable = true;
-#};
+  #virtualisation.docker.rootless = {
+  #  enable = true;
+  #  setSocketVariable = true;
+  #};
 
   virtualisation = {
     podman = {
@@ -49,7 +69,10 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
   services.fwupd.enable = true;
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "steam" "steam-original" "steam-run" "discord"
+    "steam"
+    "steam-original"
+    "steam-run"
+    #"discord"
   ];
 
   programs.fuse.userAllowOther = true;
@@ -77,7 +100,7 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
       home-manager.enable = true;
       git = {
         enable = true;
-        userName  = "Moritz Hedtke";
+        userName = "Moritz Hedtke";
         userEmail = "Moritz.Hedtke@t-online.de";
       };
       nix-index.enable = true;
@@ -87,7 +110,7 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
     home.packages = [
       pkgs.git
       pkgs.firefox
-      pkgs.discord
+      #pkgs.discord
       pkgs.gimp
       pkgs.libreoffice-fresh
       pkgs.thunderbird
@@ -103,6 +126,7 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
       pkgs.gcc
       pkgs.pdfgrep
       pkgs.openjdk19
+      pkgs.lyx
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -114,6 +138,7 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
         "Documents"
         "Videos"
         ".mozilla"
+        ".config/libreoffice"
         ".local/share/kscreen" # start on external screen by default
         ".local/share/konsole" # profile with infinite scrollback
         ".ssh"
@@ -159,6 +184,7 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
     directories = [
       "/etc/nixos"
       "/var/lib/nixos"
+      "/var/lib/docker"
       "/var/log"
       "/var/lib/systemd/coredump"
       "/var/lib/bluetooth"
@@ -192,16 +218,16 @@ boot.kernelPackages = pkgs.linuxPackages_latest;
     environmentFile = "/nix/persistent/eduroam";
     networks = {
       eduroam = {
-        auth=''
-        ssid="eduroam"
-        key_mgmt=WPA-EAP
-        eap=PEAP
-        identity="@IDENTITY@"
-        password="@PASSWORD@"
-        domain_suffix_match="radius.hrz.tu-darmstadt.de"
-        anonymous_identity="eduroam@tu-darmstadt.de"
-        phase2="auth=MSCHAPV2"
-        ca_cert="/etc/ssl/certs/ca-bundle.crt"
+        auth = ''
+          ssid="eduroam"
+          key_mgmt=WPA-EAP
+          eap=PEAP
+          identity="@IDENTITY@"
+          password="@PASSWORD@"
+          domain_suffix_match="radius.hrz.tu-darmstadt.de"
+          anonymous_identity="eduroam@tu-darmstadt.de"
+          phase2="auth=MSCHAPV2"
+          ca_cert="/etc/ssl/certs/ca-bundle.crt"
         '';
       };
     };
