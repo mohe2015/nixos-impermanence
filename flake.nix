@@ -1,10 +1,10 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"; #git+file:nixpkgs;
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unsatble"; # nixos-unstable #git+file:nixpkgs;
   inputs.home-manager = {
     url = "github:nix-community/home-manager";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  inputs.impermanence.url = "github:nix-community/impermanence/6138eb8e737bffabd4c8fc78ae015d4fd6a7e2fd";
+  inputs.impermanence.url = "github:nix-community/impermanence";
   
   outputs = { self, nixpkgs, ... }@attrs: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {

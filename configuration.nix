@@ -29,7 +29,7 @@
         registrationConfigFile = "/nix/persistent/gitlab-runner";
         dockerImage = "debian:stable";
         # https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-runnerscache-section
-        registrationFlags = [ "--cache-type=s3" "--cache-shared=true" "--cache-s3-server-address=192.168.2.140:9000"
+        registrationFlags = [ "--cache-type=s3" "--cache-shared=true" "--cache-s3-server-address=127.0.0.1:9000"
       #  "--cache-path=/var/lib/gitlab-runner/.gitlab-runner/cache"
         "--docker-network-mode=host"
         "--cache-s3-access-key=minioadmin"
@@ -196,6 +196,7 @@
       "/var/lib/systemd/coredump"
       "/var/lib/bluetooth"
       "/var/lib/flatpak"
+      "/var/lib/minio/"
     ];
     files = [
       "/etc/machine-id"
@@ -235,6 +236,12 @@
           anonymous_identity="eduroam@tu-darmstadt.de"
           phase2="auth=MSCHAPV2"
           ca_cert="/etc/ssl/certs/ca-bundle.crt"
+        '';
+      };
+      MagentaWLAN-L6J9 = {
+        auth = ''
+          ssid="MagentaWLAN-L6J9"
+          psk="@HOME_PASSWORD@"
         '';
       };
     };
