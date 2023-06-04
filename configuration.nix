@@ -79,7 +79,7 @@
     "steam"
     "steam-original"
     "steam-run"
-    #"discord"
+    "discord"
   ];
 
   programs.fuse.userAllowOther = true;
@@ -117,7 +117,7 @@
     home.packages = [
       pkgs.git
       pkgs.firefox
-      #pkgs.discord
+      pkgs.discord
       pkgs.gimp
       pkgs.libreoffice-fresh
       pkgs.thunderbird
