@@ -134,6 +134,7 @@
       pkgs.pdfgrep
       pkgs.openjdk19
       pkgs.lyx
+      pkgs.heroic
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -171,6 +172,7 @@
         ".local/share/tor-browser"
         ".config/Signal"
         ".local/share/flatpak/"
+        ".config/heroic/"
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
@@ -261,17 +263,35 @@
   systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
   systemd.network = {
     networks = {
-      "40-enp" = {
+      "20-enp" = {
         matchConfig.Name = "enp*";
         networkConfig.DHCP = "yes";
+        dhcpV4Config = {
+          RouteMetric = 10;
+        };
+        ipv6AcceptRAConfig = {
+          RouteMetric = 10;
+        };
       };
-      "40-wlp" = {
+      "25-wlp" = {
         matchConfig.Name = "wlp*";
         networkConfig.DHCP = "yes";
+        dhcpV4Config = {
+          RouteMetric = 20;
+        };
+        ipv6AcceptRAConfig = {
+          RouteMetric = 20;
+        };
       };
-      "40-bnep" = {
+      "25-bnep" = {
         matchConfig.Name = "bnep*";
         networkConfig.DHCP = "yes";
+        dhcpV4Config = {
+          RouteMetric = 20;
+        };
+        ipv6AcceptRAConfig = {
+          RouteMetric = 20;
+        };
       };
     };
   };
