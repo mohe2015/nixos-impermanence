@@ -170,6 +170,7 @@
         ".rustup"
         ".local/share/tor-browser"
         ".config/Signal"
+        ".local/share/flatpak/"
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
