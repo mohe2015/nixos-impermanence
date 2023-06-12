@@ -173,6 +173,8 @@
         ".config/Signal"
         ".local/share/flatpak/"
         ".config/heroic/"
+        ".config/legendary"
+        "Games"
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
