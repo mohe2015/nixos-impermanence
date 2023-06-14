@@ -80,6 +80,7 @@
     "steam-original"
     "steam-run"
     "discord"
+    "vscode"
   ];
 
   programs.fuse.userAllowOther = true;
@@ -121,7 +122,7 @@
       pkgs.gimp
       pkgs.libreoffice-fresh
       pkgs.thunderbird
-      pkgs.vscodium
+      pkgs.vscode
       pkgs.bubblewrap
       pkgs.chromium
       pkgs.tor-browser-bundle-bin
@@ -161,6 +162,8 @@
         ".config/discord" # "config"
         ".mozilla"
         ".config/VSCodium" # "config"
+        ".config/Code"
+        ".vscode"
         ".vscode-oss"
         ".steam"
         ".local/share/Steam"
