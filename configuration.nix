@@ -13,6 +13,19 @@
       impermanence.nixosModules.impermanence
     ];
 
+systemd.tmpfiles.rules = [
+    "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.hip}"
+  ];
+
+hardware.opengl.driSupport = true;
+# For 32 bit applications
+hardware.opengl.driSupport32Bit = true;
+
+hardware.opengl.extraPackages = with pkgs; [
+  rocm-opencl-icd
+  rocm-opencl-runtime
+];
+
   services.minio = {
     enable = true;
   };
@@ -136,6 +149,8 @@
       pkgs.openjdk19
       pkgs.lyx
       pkgs.heroic
+      pkgs.vlc
+      pkgs.godot_4
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -177,6 +192,8 @@
         ".local/share/flatpak/"
         ".config/heroic/"
         ".config/legendary"
+        ".local/share/godot"
+        ".config/godot"
         "Games"
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
@@ -333,6 +350,7 @@
     enable = true;
     layout = "de";
     xkbVariant = "";
+    videoDrivers = [ "amdgpu" ];
   };
 
   # Configure console keymap
