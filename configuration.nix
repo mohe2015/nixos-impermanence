@@ -55,7 +55,7 @@ hardware.opengl.extraPackages = with pkgs; [
   };
 
   # BROKEN RAM CONFIG
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.kernel.sysctl."vm.swappiness" = 1;
 
