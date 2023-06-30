@@ -13,6 +13,12 @@
       impermanence.nixosModules.impermanence
     ];
 
+ virtualisation.virtualbox.host.enable = true;
+   users.extraGroups.vboxusers.members = [ "moritz" ];
+ virtualisation.virtualbox.guest.enable = true;
+  virtualisation.virtualbox.guest.x11 = true;
+
+
 systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.hip}"
   ];
