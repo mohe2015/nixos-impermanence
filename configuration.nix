@@ -15,8 +15,8 @@
 
  virtualisation.virtualbox.host.enable = true;
    users.extraGroups.vboxusers.members = [ "moritz" ];
- virtualisation.virtualbox.guest.enable = true;
-  virtualisation.virtualbox.guest.x11 = true;
+# virtualisation.virtualbox.guest.enable = true; # broken
+# virtualisation.virtualbox.guest.x11 = true; broken
 
 
 systemd.tmpfiles.rules = [
@@ -60,8 +60,8 @@ hardware.opengl.extraPackages = with pkgs; [
     };
   };
 
-  # BROKEN RAM CONFIG
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # both kernels sometimes work
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.kernel.sysctl."vm.swappiness" = 1;
 
@@ -119,10 +119,10 @@ hardware.opengl.extraPackages = with pkgs; [
 
     services.easyeffects.enable = true;
     services.flameshot.enable = true;
-    services.kdeconnect = {
-      enable = true;
-      indicator = true;
-    };
+    #services.kdeconnect = {
+    #  enable = true;
+    #  indicator = true;
+    #};
 
     programs = {
       home-manager.enable = true;
@@ -137,6 +137,7 @@ hardware.opengl.extraPackages = with pkgs; [
 
     home.packages = [
       pkgs.git
+      pkgs.gdb
       pkgs.firefox
       pkgs.discord
       pkgs.gimp
@@ -206,7 +207,7 @@ hardware.opengl.extraPackages = with pkgs; [
       ];
       files = [
         ".config/konsolerc" # set default profile
-        ".config/plasma-org.kde.plasma.desktop-appletsrc" # taskbar pins
+        #".config/plasma-org.kde.plasma.desktop-appletsrc" # taskbar pins
         ".gtkrc-2.0" # dark theme
         ".config/kcminputrc" # touchpad tap to click
         ".config/baloofilerc" # disable baloo

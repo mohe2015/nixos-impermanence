@@ -1,3 +1,34 @@
+# developing godot
+
+nix develop --impure .#godot_4
+mkdir /tmp/godotout
+export out=/tmp/godotout
+source $stdenv/setup
+set +e # Optional: do not quit the shell on simple errors, Ctrl-C,...
+https://nixos.wiki/wiki/Nixpkgs/Create_and_debug_packages
+typeset -f genericBuild | grep 'phases='
+https://nixos.wiki/wiki/Packaging/Tutorial
+
+phases="${prePhases[*]:-} unpackPhase" genericBuild
+cd $sourceRoot
+phases="patchPhase ${preConfigurePhases[*]:-}             configurePhase ${preBuildPhases[*]:-} buildPhase checkPhase             ${preInstallPhases[*]:-} installPhase ${preFixupPhases[*]:-} fixupPhase installCheckPhase             ${preDistPhases[*]:-} distPhase ${postPhases[*]:-}" genericBuild
+
+
+#phases="${prePhases[*]:-} unpackPhase patchPhase ${preConfigurePhases[*]:-}             configurePhase ${preBuildPhases[*]:-} buildPhase checkPhase             ${preInstallPhases[*]:-} installPhase ${preFixupPhases[*]:-} fixupPhase installCheckPhase             ${preDistPhases[*]:-} distPhase ${postPhases[*]:-}" genericBuild
+unpackPhase
+cd $sourceRoot
+patchPhase
+configurePhase
+buildPhase
+installPhase
+
+
+
+
+
+
+
+
 dbus-send --system --type=method_call --dest=org.bluez /org/bluez/hci0/dev_84_CF_BF_8E_61_6B org.bluez.Network1.Connect string:'nap'
 
 
