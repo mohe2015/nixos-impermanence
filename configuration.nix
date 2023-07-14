@@ -159,6 +159,7 @@ hardware.opengl.extraPackages = with pkgs; [
       pkgs.heroic
       pkgs.vlc
       pkgs.godot_4
+      pkgs.pympress
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -208,7 +209,7 @@ hardware.opengl.extraPackages = with pkgs; [
       files = [
         ".config/konsolerc" # set default profile
         #".config/plasma-org.kde.plasma.desktop-appletsrc" # taskbar pins
-        ".gtkrc-2.0" # dark theme
+        #".gtkrc-2.0" # dark theme
         ".config/kcminputrc" # touchpad tap to click
         ".config/baloofilerc" # disable baloo
         ".config/mimeapps.list" # default applications
@@ -305,7 +306,10 @@ hardware.opengl.extraPackages = with pkgs; [
       };
       "25-wlp" = {
         matchConfig.Name = "wlp*";
-        networkConfig.DHCP = "yes";
+        networkConfig = {
+          DHCP = "yes";
+          DNS="1.1.1.1";
+        };
         dhcpV4Config = {
           RouteMetric = 20;
         };
