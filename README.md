@@ -1,19 +1,39 @@
-# developing godot
 
-nix develop --impure .#godot_4
-mkdir /tmp/godotout
-export out=/tmp/godotout
+cd ~/Documents/Godot/
+git clone --depth 1 https://github.com/godotengine/godot.git
+
+# you need to reexecute this to update the package definition
+cd ~/Documents/Godot/godot/
+nix develop /etc/nixos/nixpkgs#godot_4
+
 source $stdenv/setup
-set +e # Optional: do not quit the shell on simple errors, Ctrl-C,...
-https://nixos.wiki/wiki/Nixpkgs/Create_and_debug_packages
+set +e
+phases="patchPhase ${preConfigurePhases[*]:-} configurePhase ${preBuildPhases[*]:-} buildPhase checkPhase ${preInstallPhases[*]:-} installPhase ${preFixupPhases[*]:-} fixupPhase installCheckPhase ${preDistPhases[*]:-} distPhase ${postPhases[*]:-}" genericBuild
+./outputs/out/bin/godot4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 typeset -f genericBuild | grep 'phases='
 https://nixos.wiki/wiki/Packaging/Tutorial
-
+https://nixos.wiki/wiki/Nixpkgs/Create_and_debug_packages
 phases="${prePhases[*]:-} unpackPhase" genericBuild
 cd $sourceRoot
 phases="patchPhase ${preConfigurePhases[*]:-}             configurePhase ${preBuildPhases[*]:-} buildPhase checkPhase             ${preInstallPhases[*]:-} installPhase ${preFixupPhases[*]:-} fixupPhase installCheckPhase             ${preDistPhases[*]:-} distPhase ${postPhases[*]:-}" genericBuild
-
-
 #phases="${prePhases[*]:-} unpackPhase patchPhase ${preConfigurePhases[*]:-}             configurePhase ${preBuildPhases[*]:-} buildPhase checkPhase             ${preInstallPhases[*]:-} installPhase ${preFixupPhases[*]:-} fixupPhase installCheckPhase             ${preDistPhases[*]:-} distPhase ${postPhases[*]:-}" genericBuild
 unpackPhase
 cd $sourceRoot
