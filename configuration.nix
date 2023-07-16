@@ -13,24 +13,24 @@
       impermanence.nixosModules.impermanence
     ];
 
- virtualisation.virtualbox.host.enable = true;
-   users.extraGroups.vboxusers.members = [ "moritz" ];
-# virtualisation.virtualbox.guest.enable = true; # broken
-# virtualisation.virtualbox.guest.x11 = true; broken
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "moritz" ];
+  # virtualisation.virtualbox.guest.enable = true; # broken
+  # virtualisation.virtualbox.guest.x11 = true; broken
 
 
-systemd.tmpfiles.rules = [
+  systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.hip}"
   ];
 
-hardware.opengl.driSupport = true;
-# For 32 bit applications
-hardware.opengl.driSupport32Bit = true;
+  hardware.opengl.driSupport = true;
+  # For 32 bit applications
+  hardware.opengl.driSupport32Bit = true;
 
-hardware.opengl.extraPackages = with pkgs; [
-  rocm-opencl-icd
-  rocm-opencl-runtime
-];
+  hardware.opengl.extraPackages = with pkgs; [
+    rocm-opencl-icd
+    rocm-opencl-runtime
+  ];
 
   services.minio = {
     enable = true;
@@ -48,13 +48,16 @@ hardware.opengl.extraPackages = with pkgs; [
         registrationConfigFile = "/nix/persistent/gitlab-runner";
         dockerImage = "debian:stable";
         # https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-runnerscache-section
-        registrationFlags = [ "--cache-type=s3" "--cache-shared=true" "--cache-s3-server-address=127.0.0.1:9000"
-      #  "--cache-path=/var/lib/gitlab-runner/.gitlab-runner/cache"
-        "--docker-network-mode=host"
-        "--cache-s3-access-key=minioadmin"
-        "--cache-s3-secret-key=minioadmin"
-        "--cache-s3-bucket-name=test"
-        "--cache-s3-insecure=true"
+        registrationFlags = [
+          "--cache-type=s3"
+          "--cache-shared=true"
+          "--cache-s3-server-address=127.0.0.1:9000"
+          #  "--cache-path=/var/lib/gitlab-runner/.gitlab-runner/cache"
+          "--docker-network-mode=host"
+          "--cache-s3-access-key=minioadmin"
+          "--cache-s3-secret-key=minioadmin"
+          "--cache-s3-bucket-name=test"
+          "--cache-s3-insecure=true"
         ];
       };
     };
@@ -128,6 +131,7 @@ hardware.opengl.extraPackages = with pkgs; [
       home-manager.enable = true;
       git = {
         enable = true;
+        lfs.enable = true;
         userName = "Moritz Hedtke";
         userEmail = "Moritz.Hedtke@t-online.de";
       };
@@ -160,6 +164,7 @@ hardware.opengl.extraPackages = with pkgs; [
       pkgs.vlc
       pkgs.godot_4
       pkgs.pympress
+      pkgs.filelight
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -175,7 +180,7 @@ hardware.opengl.extraPackages = with pkgs; [
         ".local/share/kscreen" # start on external screen by default
         ".local/share/konsole" # profile with infinite scrollback
         ".ssh"
-        ".bash_history"
+	".local/share/Trash"
 
         # found using
         # systemctl --user stop pipewire.service
@@ -207,6 +212,7 @@ hardware.opengl.extraPackages = with pkgs; [
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
+        ".bash_history"
         ".config/konsolerc" # set default profile
         #".config/plasma-org.kde.plasma.desktop-appletsrc" # taskbar pins
         #".gtkrc-2.0" # dark theme
@@ -308,7 +314,7 @@ hardware.opengl.extraPackages = with pkgs; [
         matchConfig.Name = "wlp*";
         networkConfig = {
           DHCP = "yes";
-          DNS="1.1.1.1";
+          DNS = "1.1.1.1";
         };
         dhcpV4Config = {
           RouteMetric = 20;
