@@ -64,7 +64,7 @@
   };
 
   # both kernels sometimes work
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.kernel.sysctl."vm.swappiness" = 1;
 
@@ -120,6 +120,10 @@
       SDL_VIDEODRIVER = "wayland";
     };
 
+    home.sessionPath = [
+      "$HOME/.cargo/bin"
+    ];
+
     services.easyeffects.enable = true;
     services.flameshot.enable = true;
     #services.kdeconnect = {
@@ -134,6 +138,10 @@
         lfs.enable = true;
         userName = "Moritz Hedtke";
         userEmail = "Moritz.Hedtke@t-online.de";
+      };
+      bash = {
+	enable = true;
+	
       };
       nix-index.enable = true;
     };
@@ -165,6 +173,8 @@
       pkgs.godot_4
       pkgs.pympress
       pkgs.filelight
+      pkgs.yarn
+      pkgs.wasm-pack
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -285,6 +295,9 @@
         '';
       };
     };
+#    extraConfig = ''
+#	wpa_deny_ptk0_rekey = 1
+#    '';
   };
 
   # Configure network proxy if necessary
