@@ -98,6 +98,8 @@
 
   services.fwupd.enable = true;
 
+  nixpkgs.overlays = [ rust-overlay.overlays.default ];
+
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "steam"
     "steam-original"
@@ -164,10 +166,12 @@
       pkgs.texlive.combined.scheme-full
       pkgs.signal-desktop
       pkgs.xournalpp
-      (rust-overlay.packages.x86_64-linux.default.override {
-        extensions = [ "rust-src" "rustfmt" "rust-analyzer" ];
-        #targets = [ "arm-unknown-linux-gnueabihf" ];
+      (pkgs.rust-bin.stable.latest.default.override {
+        extensions = [ "rust-analyzer" ];
+        targets = [ "wasm32-unknown-unknown" ];
       })
+      pkgs.wasm-pack
+      pkgs.wasm-bindgen-cli
       pkgs.gcc
       pkgs.pdfgrep
       pkgs.openjdk19
@@ -178,7 +182,6 @@
       pkgs.pympress
       pkgs.filelight
       pkgs.yarn
-      pkgs.wasm-pack
       pkgs.sccache
     ];
 
