@@ -102,7 +102,7 @@
     "steam"
     "steam-original"
     "steam-run"
-    "discord"
+    #"discord"
     "vscode"
   ];
 
@@ -151,7 +151,7 @@
       pkgs.git
       pkgs.gdb
       pkgs.firefox
-      pkgs.discord
+      #pkgs.discord
       pkgs.gimp
       pkgs.libreoffice-fresh
       pkgs.thunderbird
@@ -175,6 +175,7 @@
       pkgs.filelight
       pkgs.yarn
       pkgs.wasm-pack
+      pkgs.sccache
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -286,6 +287,7 @@
           anonymous_identity="eduroam@tu-darmstadt.de"
           phase2="auth=MSCHAPV2"
           ca_cert="/etc/ssl/certs/ca-bundle.crt"
+          wpa_deny_ptk0_rekey=1
         '';
       };
       MagentaWLAN-L6J9 = {
@@ -295,9 +297,6 @@
         '';
       };
     };
-#    extraConfig = ''
-#	wpa_deny_ptk0_rekey = 1
-#    '';
   };
 
   # Configure network proxy if necessary
