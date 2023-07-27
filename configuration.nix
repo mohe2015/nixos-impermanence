@@ -167,7 +167,7 @@
       pkgs.signal-desktop
       pkgs.xournalpp
       (pkgs.rust-bin.stable.latest.default.override {
-        extensions = [ "rust-analyzer" ];
+        extensions = [ "rust-analyzer" "rust-src" ];
         targets = [ "wasm32-unknown-unknown" ];
       })
       pkgs.wasm-pack
