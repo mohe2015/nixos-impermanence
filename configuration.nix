@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, home-manager, impermanence, ... }:
+{ config, pkgs, lib, home-manager, impermanence, rust-overlay, ... }:
 
 {
   imports =
@@ -140,14 +140,15 @@
         userEmail = "Moritz.Hedtke@t-online.de";
       };
       bash = {
-	enable = true;
-	
+        enable = true;
+
       };
       nix-index.enable = true;
     };
 
 
     home.packages = [
+      pkgs.nixpkgs-fmt
       pkgs.git
       pkgs.gdb
       pkgs.firefox
@@ -163,7 +164,10 @@
       pkgs.texlive.combined.scheme-full
       pkgs.signal-desktop
       pkgs.xournalpp
-      pkgs.rustup
+      (rust-overlay.packages.x86_64-linux.default.override {
+        extensions = [ "rust-src" "rustfmt" "rust-analyzer" ];
+        #targets = [ "arm-unknown-linux-gnueabihf" ];
+      })
       pkgs.gcc
       pkgs.pdfgrep
       pkgs.openjdk19
@@ -191,7 +195,7 @@
         ".local/share/kscreen" # start on external screen by default
         ".local/share/konsole" # profile with infinite scrollback
         ".ssh"
-	".local/share/Trash"
+        ".local/share/Trash"
 
         # found using
         # systemctl --user stop pipewire.service
@@ -211,7 +215,7 @@
         ".config/chromium/"
         ".config/easyeffects"
         ".cargo"
-        ".rustup"
+        #".rustup"
         ".local/share/tor-browser"
         ".config/Signal"
         ".local/share/flatpak/"
