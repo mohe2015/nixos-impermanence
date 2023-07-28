@@ -49,6 +49,7 @@
         dockerImage = "debian:stable";
         # https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-runnerscache-section
         registrationFlags = [
+          "--docker-host=tcp://127.0.0.1:2375"
           "--cache-type=s3"
           "--cache-shared=true"
           "--cache-s3-server-address=127.0.0.1:9000"
@@ -70,7 +71,12 @@
 
   services.flatpak.enable = true;
 
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    listenOptions = [
+      "/run/docker.sock"
+      "0.0.0.0:2375"
+    ];
+  };
 
   #virtualisation.docker.rootless = {
   #  enable = true;
@@ -150,6 +156,8 @@
 
 
     home.packages = [
+      pkgs.valgrind
+      pkgs.gnuplot
       pkgs.nixpkgs-fmt
       pkgs.git
       pkgs.gdb
@@ -429,7 +437,7 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ ];
+  networking.firewall.allowedTCPPorts = [ 2375 ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 1714; to = 1764; } # KDE Connect
   ];
