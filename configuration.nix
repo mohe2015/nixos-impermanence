@@ -13,6 +13,16 @@
       impermanence.nixosModules.impermanence
     ];
 
+  services.beesd = {
+    filesystems = {
+      backup1 = {
+        spec = "/mnt/nixstore/";
+        hashTableSizeMB = 4096;
+        extraOptions = [ "--thread-count" "1" "--loadavg-target" "2" ];
+      };
+    };
+  };
+
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "moritz" ];
   # virtualisation.virtualbox.guest.enable = true; # broken
@@ -193,6 +203,8 @@
       pkgs.filelight
       pkgs.yarn
       pkgs.sccache
+      pkgs.iotop
+      pkgs.htop
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
