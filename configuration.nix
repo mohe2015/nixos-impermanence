@@ -156,6 +156,8 @@
 
 
     home.packages = [
+      pkgs.btrfs-progs
+      pkgs.gparted
       pkgs.valgrind
       pkgs.gnuplot
       pkgs.nixpkgs-fmt
