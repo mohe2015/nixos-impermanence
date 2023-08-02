@@ -13,15 +13,17 @@
       impermanence.nixosModules.impermanence
     ];
 
-  services.beesd = {
-    filesystems = {
-      backup1 = {
-        spec = "/mnt/nixstore/";
-        hashTableSizeMB = 4096;
-        extraOptions = [ "--thread-count" "1" "--loadavg-target" "2" ];
-      };
-    };
-  };
+#  services.beesd = {
+#    filesystems = {
+#      backup1 = {
+#        spec = "/mnt/nixstore/";
+ #       hashTableSizeMB = 4096;
+ ##       extraOptions = [ "--thread-count" "1" "--loadavg-target" "2" ];
+ #     };
+ #   };
+ # };
+
+  nix.settings.auto-optimise-store = true;
 
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "moritz" ];
@@ -177,7 +179,7 @@
       #pkgs.discord
       pkgs.gimp
       pkgs.libreoffice-fresh
-      pkgs.thunderbird
+      pkgs.betterbird
       pkgs.vscode
       pkgs.bubblewrap
       pkgs.chromium
