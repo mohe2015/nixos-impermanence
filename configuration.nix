@@ -125,6 +125,7 @@
     #"discord"
     "vscode"
     "android-studio-stable"
+    "android-studio-canary"
   ];
 
   programs.fuse.userAllowOther = true;
@@ -211,7 +212,7 @@
       pkgs.htop
       pkgs.duperemove
       pkgs.compsize
-      pkgs.android-studio#
+      pkgs.androidStudioPackages.canary
       pkgs.rpi-imager
     ];
 
