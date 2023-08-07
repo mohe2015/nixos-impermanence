@@ -124,6 +124,7 @@
     "steam-run"
     #"discord"
     "vscode"
+    "android-studio-stable"
   ];
 
   programs.fuse.userAllowOther = true;
@@ -204,14 +205,21 @@
       pkgs.pympress
       pkgs.filelight
       pkgs.yarn
+      pkgs.nodejs_latest
       pkgs.sccache
       pkgs.iotop
       pkgs.htop
+      pkgs.duperemove
+      pkgs.compsize
+      pkgs.android-studio#
+      pkgs.rpi-imager
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
       allowOther = true;
       directories = [
+        "Android"
+        "AndroidStudioProjects"
         "Downloads"
         "Music"
         "Pictures"
@@ -460,7 +468,9 @@
   networking.firewall.allowedUDPPortRanges = [
     { from = 1714; to = 1764; } # KDE Connect
   ];
-  networking.firewall.allowedUDPPorts = [ ];
+  networking.firewall.allowedUDPPorts = [
+    5353 # mdns
+  ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
