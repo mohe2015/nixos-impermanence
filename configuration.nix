@@ -235,7 +235,7 @@
         ".local/share/konsole" # profile with infinite scrollback
         ".ssh"
         ".local/share/Trash"
-
+        ".local/share/Anki2"
         # found using
         # systemctl --user stop pipewire.service
         # systemctl --user stop pipewire-pulse.service
