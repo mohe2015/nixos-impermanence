@@ -214,6 +214,9 @@
       pkgs.compsize
       pkgs.androidStudioPackages.canary
       pkgs.rpi-imager
+      pkgs.gh
+      pkgs.anki-bin
+      pkgs.xorg.xeyes
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
