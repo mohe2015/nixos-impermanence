@@ -217,6 +217,8 @@
       pkgs.gh
       pkgs.anki-bin
       pkgs.xorg.xeyes
+      pkgs.kalendar
+      pkgs.fd
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
