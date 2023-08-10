@@ -218,6 +218,7 @@
       pkgs.anki-bin
       pkgs.xorg.xeyes
       pkgs.kalendar
+      pkgs.libsForQt5.kdepim-addons
       pkgs.fd
     ];
 
