@@ -6,8 +6,9 @@
   };
   inputs.impermanence.url = "github:nix-community/impermanence/6138eb8e737bffabd4c8fc78ae015d4fd6a7e2fd";
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
+  inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-  outputs = { self, nixpkgs, rust-overlay, ... }@attrs: rec {
+  outputs = { self, nixpkgs, rust-overlay, nixos-hardware, ... }@attrs: rec {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs = attrs;
@@ -16,8 +17,9 @@
 
     nixosConfigurations.rpi4 = nixpkgs.lib.nixosSystem {
       modules = [
-        "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-new-kernel.nix"
+        "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
         ./rpi4-configuration.nix
+        nixos-hardware.nixosModules.raspberry-pi-4
       ];
     };
     images.rpi4 = nixosConfigurations.rpi4.config.system.build.sdImage;

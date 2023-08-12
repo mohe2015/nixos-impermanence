@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, lib, ... }:
 
 {
   # nested aarch64 virtualization is not nice
@@ -7,24 +7,25 @@
   #nixpkgs.buildPlatform = "x86_64-linux";
   #nixpkgs.hostPlatform = "aarch64-linux";
   documentation.nixos.enable = false;
-  boot.supportedFilesystems = nixpkgs.lib.mkForce [ "btrfs" "vfat" ];
+  boot.supportedFilesystems = lib.mkForce [ "btrfs" "vfat" ];
   sdImage.compressImage = false;
-  system.stateVersion = "23.11";
 
-  networking.wireless.enable = false;
+  networking.wireless.enable = true;
   hardware.opengl = {
     enable = true;
     setLdLibraryPath = true;
     package = pkgs.mesa_drivers;
   };
-  hardware.deviceTree = {
-    base = pkgs.device-tree_rpi;
-    overlays = [ "${pkgs.device-tree_rpi.overlays}/vc4-fkms-v3d.dtbo" ];
-  };
   services.xserver = {
     enable = true;
-    displayManager.slim.enable = true;
-    desktopManager.gnome3.enable = true;
+    displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
     videoDrivers = [ "modesetting" ];
   };
+
+  boot.loader.raspberryPi.firmwareConfig = ''
+    gpu_mem=192
+  '';
+
+  system.stateVersion = "23.11";
 }

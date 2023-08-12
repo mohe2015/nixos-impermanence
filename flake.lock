@@ -54,13 +54,26 @@
         "type": "github"
       }
     },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1691871742,
+        "narHash": "sha256-6yDNjfbAMpwzWL4y75fxs6beXHRANfYX8BNSPjYehck=",
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "rev": "430a56dd16fe583a812b2df44dca002acab2f4f6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1691877521,
-        "narHash": "sha256-I0AA99i+g5KffhWRWsgQy+MqzdsnHWPrSxBJw9vEGvo=",
-        "ref": "refs/heads/my",
-        "rev": "2de762c73c939e0d98e8060c8351e38a84f164ad",
-        "revCount": 513026,
+        "lastModified": 1691879527,
+        "narHash": "sha256-hycDTtlyFrEFp/5Dx5nHR16MyzyWfKJJF28jEt5ld74=",
         "type": "git",
         "url": "file:nixpkgs"
       },
@@ -89,6 +102,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "impermanence": "impermanence",
+        "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay"
       }
