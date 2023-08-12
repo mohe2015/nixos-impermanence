@@ -23,9 +23,15 @@
  #   };
  # };
 
+  zramSwap = {
+    enable = true;
+    memoryPercent = 200;
+    writebackDevice = "/dev/disk/by-uuid/c9534520-b58d-4bc2-9a51-0978fd64e1ce";
+  };
+
   nix.settings.auto-optimise-store = true;
 
-  virtualisation.virtualbox.host.enable = true;
+  #virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "moritz" ];
   # virtualisation.virtualbox.guest.enable = true; # broken
   # virtualisation.virtualbox.guest.x11 = true; broken
@@ -45,10 +51,10 @@
   ];
 
   services.minio = {
-    enable = true;
+    enable = false;
   };
   services.gitlab-runner = {
-    enable = true;
+    enable = false;
     settings = {
       concurrent = 50;
     };
@@ -79,16 +85,7 @@
   # both kernels sometimes work
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.kernel.sysctl."vm.swappiness" = 1;
-
   services.flatpak.enable = true;
-
-  virtualisation.docker = {
-    listenOptions = [
-      "/run/docker.sock"
-      "0.0.0.0:2375"
-    ];
-  };
 
   #virtualisation.docker.rootless = {
   #  enable = true;
@@ -97,7 +94,7 @@
 
   virtualisation = {
     podman = {
-      enable = true;
+      enable = false;
       defaultNetwork.settings.dns_enabled = true;
     };
   };
@@ -130,7 +127,7 @@
 
   programs.fuse.userAllowOther = true;
 
-  programs.steam.enable = true;
+  programs.steam.enable = false;
 
   home-manager.users.moritz = {
     home.homeDirectory = "/home/moritz";
@@ -172,22 +169,22 @@
     home.packages = [
       pkgs.btrfs-progs
       pkgs.gparted
-      pkgs.valgrind
-      pkgs.gnuplot
+      #pkgs.valgrind
+      #pkgs.gnuplot
       pkgs.nixpkgs-fmt
       pkgs.git
-      pkgs.gdb
+      #pkgs.gdb
       pkgs.firefox
       #pkgs.discord
-      pkgs.gimp
+      #pkgs.gimp
       pkgs.libreoffice-fresh
       pkgs.betterbird
       pkgs.vscode
-      pkgs.bubblewrap
+      #pkgs.bubblewrap
       pkgs.chromium
-      pkgs.tor-browser-bundle-bin
-      pkgs.texstudio
-      pkgs.texlive.combined.scheme-full
+      #pkgs.tor-browser-bundle-bin
+      #pkgs.texstudio
+      #pkgs.texlive.combined.scheme-full
       pkgs.signal-desktop
       pkgs.xournalpp
       (pkgs.rust-bin.stable.latest.default.override {
@@ -197,28 +194,28 @@
       pkgs.wasm-pack
       pkgs.wasm-bindgen-cli
       pkgs.gcc
-      pkgs.pdfgrep
+      #pkgs.pdfgrep
       pkgs.openjdk19
-      pkgs.lyx
-      pkgs.heroic
+      #pkgs.lyx
+      #pkgs.heroic
       pkgs.vlc
-      pkgs.godot_4
-      pkgs.pympress
+      #pkgs.godot_4
+      #pkgs.pympress
       pkgs.filelight
       pkgs.yarn
       pkgs.nodejs_latest
-      pkgs.sccache
+      #pkgs.sccache
       pkgs.iotop
       pkgs.htop
       pkgs.duperemove
       pkgs.compsize
       pkgs.androidStudioPackages.canary
-      pkgs.rpi-imager
+      #pkgs.rpi-imager
       pkgs.gh
       pkgs.anki-bin
       pkgs.xorg.xeyes
-      pkgs.kalendar
-      pkgs.libsForQt5.kdepim-addons
+      #pkgs.kalendar
+      #pkgs.libsForQt5.kdepim-addons
       pkgs.fd
     ];
 
@@ -414,7 +411,7 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
-  hardware.bluetooth.enable = true;
+  hardware.bluetooth.enable = false;
 
   # Enable the KDE Plasma Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
@@ -433,7 +430,7 @@
   console.keyMap = "de";
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing.enable = false;
 
   # Enable sound with pipewire.
   # /etc/udev/rules.d/90-alsa-restore.rules
@@ -481,7 +478,7 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  #boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   virtualisation.libvirtd.enable = true;
 
