@@ -26,7 +26,13 @@
   zramSwap = {
     enable = true;
     memoryPercent = 200;
-    writebackDevice = "/dev/disk/by-uuid/c9534520-b58d-4bc2-9a51-0978fd64e1ce";
+    #writebackDevice = "/dev/disk/by-uuid/c9534520-b58d-4bc2-9a51-0978fd64e1ce";
+  };
+
+  systemd.oomd = {
+    enableRootSlice = true;
+    enableSystemSlice = true;
+    enableUserServices = true;
   };
 
   nix.settings.auto-optimise-store = true;
