@@ -171,7 +171,6 @@
       nix-index.enable = true;
     };
 
-
     home.packages = [
       pkgs.btrfs-progs
       pkgs.gparted
@@ -471,6 +470,7 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
+  networking.firewall.logRefusedConnections = false;
   networking.firewall.allowedTCPPorts = [ 2375 ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 1714; to = 1764; } # KDE Connect

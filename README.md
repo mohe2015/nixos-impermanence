@@ -14,7 +14,7 @@ phases="patchPhase ${preConfigurePhases[*]:-} configurePhase ${preBuildPhases[*]
 
 
 
-
+mkpasswd --method=sha-512 --rounds=10000000
 
 
 
