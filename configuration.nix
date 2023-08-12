@@ -216,7 +216,7 @@
       pkgs.duperemove
       pkgs.compsize
       pkgs.androidStudioPackages.canary
-      #pkgs.rpi-imager
+      pkgs.rpi-imager
       pkgs.gh
       pkgs.anki-bin
       pkgs.xorg.xeyes
@@ -417,7 +417,7 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
-  hardware.bluetooth.enable = false;
+  hardware.bluetooth.enable = true;
 
   # Enable the KDE Plasma Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
@@ -484,7 +484,7 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  #boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   virtualisation.libvirtd.enable = true;
 

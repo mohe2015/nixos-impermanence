@@ -19,10 +19,11 @@
         "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-new-kernel.nix"
         {
           # nested aarch64 virtualization is not nice
-          #nixpkgs.system = "aarch64-linux";
+          nixpkgs.system = "aarch64-linux";
           # https://gcc.gnu.org/onlinedocs/gccint/Configure-Terms.html
-          nixpkgs.buildPlatform = "x86_64-linux";
-          nixpkgs.hostPlatform = "aarch64-linux";
+          #nixpkgs.buildPlatform = "x86_64-linux";
+          #nixpkgs.hostPlatform = "aarch64-linux";
+          documentation.nixos.enable = false;
           boot.supportedFilesystems = nixpkgs.lib.mkForce [ "btrfs" "vfat" ];
           sdImage.compressImage = false;
           system.stateVersion = "23.11";
