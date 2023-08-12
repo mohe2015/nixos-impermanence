@@ -10,7 +10,6 @@
   boot.supportedFilesystems = lib.mkForce [ "btrfs" "vfat" ];
   sdImage.compressImage = false;
 
-  networking.wireless.enable = true;
   hardware.opengl = {
     enable = true;
     setLdLibraryPath = true;

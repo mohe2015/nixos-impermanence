@@ -74,6 +74,9 @@
       "locked": {
         "lastModified": 1691879527,
         "narHash": "sha256-hycDTtlyFrEFp/5Dx5nHR16MyzyWfKJJF28jEt5ld74=",
+        "ref": "refs/heads/my",
+        "rev": "647da402bfe54c669a4e2db101e9a61ea79508f0",
+        "revCount": 513027,
         "type": "git",
         "url": "file:nixpkgs"
       },
