@@ -10,6 +10,8 @@
   boot.supportedFilesystems = lib.mkForce [ "btrfs" "vfat" ];
   sdImage.compressImage = false;
 
+  hardware.raspberry-pi."4".fkms-3d.enable = true;
+
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
