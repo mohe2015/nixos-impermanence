@@ -44,6 +44,8 @@
 
               boot.loader.systemd-boot.enable = true;
 
+              boot.loader.efi.efiSysMountPoint = "/";
+
               boot.kernelPackages = pkgs.linuxPackages_latest;
 
               nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -64,6 +66,16 @@
           {
 
           } ''
+            ${pkgs.util-linux}/bin/mount
+
+            mkdir -p /tmp/boot/efi
+            touch /tmp/os-release
+            cd /tmp/boot/efi
+            # https://systemd.io/ENVIRONMENT/
+            SYSTEMD_OS_RELEASE=/tmp/os-release SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/tmp/boot/efi NIXOS_INSTALL_BOOTLOADER=1 ${nixosConfigurations.minimal-image.config.system.build.installBootLoader} ${nixosConfigurations.minimal-image.config.system.build.toplevel}
+            cd /tmp/boot/efi
+            ls -la .
+
             ${pkgs.util-linux}/bin/fallocate -l 2GiB $out
             ${pkgs.parted}/bin/parted $out -- mklabel gpt
             ${pkgs.parted}/bin/parted $out -- mkpart ESP fat32 1MiB 512MiB
@@ -73,7 +85,7 @@
             ${pkgs.util-linux}/bin/partx $out --nr 1 --pairs
             eval $(${pkgs.util-linux}/bin/partx $out --nr 1 --pairs)
             ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./esp.img
-            ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot ./esp.img
+            ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n BOOT ./esp.img
             dd conv=notrunc if=./esp.img of=$out seek=$START count=$SECTORS
 
             mkdir -p ./rootImage/nix/store
@@ -85,9 +97,8 @@
             ${pkgs.btrfs-progs}/bin/mkfs.btrfs --rootdir ./rootImage --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
             dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS
 
-            mkdir boot
-            cd boot
-            ${nixosConfigurations.minimal-image.config.system.build.installBootLoader}
+            
+            ${pkgs.mtools}/bin/mcopy -i ./esp.img /tmp/boot ::
             '';
 
           verify-image-no-vm = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"

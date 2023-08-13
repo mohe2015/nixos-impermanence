@@ -91,7 +91,7 @@
     "nixpkgs": {
       "locked": {
         "lastModified": 1691654369,
-        "narHash": "sha256-eSBFj9tNHZC1oFs3LcicNgdy8JWZYthfNYdyHWEO6QY=",
+        "narHash": "sha256-SYpgclQeC+5EXPGg/90iyh7zzVH6HZxT/PKVUVmyk/w=",
         "type": "git",
         "url": "file:nixpkgs"
       },
