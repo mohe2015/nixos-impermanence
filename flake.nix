@@ -37,7 +37,21 @@
           system = "aarch64-linux";
           modules = [
             {
+              networking.hostName = "rpi4";
+
               boot.loader.systemd-boot.enable = true;
+
+              boot.kernelPackages = pkgs.linuxPackages_latest;
+
+              nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+              fileSystems."/" =
+              {
+                device = "/dev/disk/by-label/NIXOS_SD";
+                fsType = "btrfs";
+              };
+
+              system.stateVersion = "23.11";
             }
           ];
         };
@@ -59,10 +73,13 @@
             ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot ./esp.img
             dd conv=notrunc if=./esp.img of=$out seek=$START count=$SECTORS
 
+            mkdir -p ./rootImage/nix/store
+            xargs -I % cp --recursive --no-dereference --preserve=links % -t ./rootImage/nix/store/ < ${pkgs.closureInfo { rootPaths = nixosConfigurations.minimal-image.config.system.build.toplevel; }}/store-paths
+
             ${pkgs.util-linux}/bin/partx $out --nr 2 --pairs
             eval $(${pkgs.util-linux}/bin/partx $out --nr 2 --pairs)
             ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./root.img
-            ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
+            ${pkgs.btrfs-progs}/bin/mkfs.btrfs --rootdir ./rootImage --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
             dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS
             '';
 
