@@ -42,7 +42,37 @@
           ];
         };
 
-        packages = {
+        packages = rec {
+          image-no-vm = pkgs.runCommand "test.img"
+          {
+
+          } ''
+            ${pkgs.util-linux}/bin/fallocate -l 1M ./header.img
+            ${pkgs.util-linux}/bin/fallocate -l 512M ./esp.img
+            ${pkgs.util-linux}/bin/fallocate -l 1G ./root.img
+            ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot ./esp.img
+            ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
+            cat ./header.img ./esp.img ./root.img > $out
+            ${pkgs.parted}/bin/parted $out -- mklabel gpt
+            ${pkgs.parted}/bin/parted $out -- mkpart ESP fat32 1MB 512MB
+            ${pkgs.parted}/bin/parted $out -- set 1 esp on
+            ${pkgs.parted}/bin/parted $out -- mkpart root btrfs 512MB 100%
+          '';
+
+          verify-image-no-vm = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
+            { 
+            }
+            ''
+            ${pkgs.kmod}/bin/modprobe loop
+            ${pkgs.coreutils}/bin/ls -la /dev/loop*
+            ${pkgs.util-linux}/bin/losetup --partscan ${image-no-vm}
+            ${pkgs.coreutils}/bin/ls -la /dev/loop*
+            ${pkgs.parted}/bin/parted /dev/loop0 -- print
+            ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
+            ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
+            ${pkgs.util-linux}/bin/mount -t btrfs /dev/loop0p2 /mnt
+            '');
+
           test = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
             { 
               preVM = ''
