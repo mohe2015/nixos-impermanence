@@ -9,7 +9,7 @@ nix --extra-experimental-features nix-command --extra-experimental-features flak
 sudo chown moritz:users /etc/nixos/
 git clone git@github.com:mohe2015/nixos-impermanence.git /etc/nixos
 nix --extra-experimental-features nix-command --extra-experimental-features flakes flake update
-nixos-rebuild test --flake /etc/nixos#rpi4
+sudo nixos-rebuild test --flake /etc/nixos#rpi4
 
 cd ~/Documents/Godot/
 git clone --depth 1 https://github.com/godotengine/godot.git
