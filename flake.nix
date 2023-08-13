@@ -44,7 +44,7 @@
 
               boot.loader.systemd-boot.enable = true;
 
-              boot.loader.efi.efiSysMountPoint = "/";
+              boot.loader.efi.efiSysMountPoint = "/build";
 
               boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -66,39 +66,34 @@
           {
 
           } ''
-            ${pkgs.util-linux}/bin/mount
+            echo "ID=nixos" > /build/os-release
+            NO_ROOT=1 KERNEL_INSTALL_CONF_ROOT=/build SYSTEMD_OS_RELEASE=/build/os-release SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/build NIXOS_INSTALL_BOOTLOADER=1 ${nixosConfigurations.minimal-image.config.system.build.installBootLoader} ${nixosConfigurations.minimal-image.config.system.build.toplevel}
+            mkdir /build/boot
+            shopt -s extglob
+            mv /build/!(boot) /build/boot
+            ls -la /build/boot
 
-            mkdir -p /tmp/boot/efi
-            touch /tmp/os-release
-            cd /tmp/boot/efi
-            # https://systemd.io/ENVIRONMENT/
-            SYSTEMD_OS_RELEASE=/tmp/os-release SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/tmp/boot/efi NIXOS_INSTALL_BOOTLOADER=1 ${nixosConfigurations.minimal-image.config.system.build.installBootLoader} ${nixosConfigurations.minimal-image.config.system.build.toplevel}
-            cd /tmp/boot/efi
-            ls -la .
-
-            ${pkgs.util-linux}/bin/fallocate -l 2GiB $out
+            ${pkgs.util-linux}/bin/fallocate -l 1GiB $out
             ${pkgs.parted}/bin/parted $out -- mklabel gpt
-            ${pkgs.parted}/bin/parted $out -- mkpart ESP fat32 1MiB 512MiB
+            ${pkgs.parted}/bin/parted $out -- mkpart ESP fat32 1MiB 100MiB
             ${pkgs.parted}/bin/parted $out -- set 1 esp on
-            ${pkgs.parted}/bin/parted $out -- mkpart root btrfs 512MiB 100%
+            ${pkgs.parted}/bin/parted $out -- mkpart root btrfs 100MiB 100%
+            ${pkgs.parted}/bin/parted $out -- print
 
-            ${pkgs.util-linux}/bin/partx $out --nr 1 --pairs
             eval $(${pkgs.util-linux}/bin/partx $out --nr 1 --pairs)
             ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./esp.img
             ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n BOOT ./esp.img
+            du -sh /build/boot
+            ${pkgs.mtools}/bin/mcopy -i ./esp.img /build/boot ::
             dd conv=notrunc if=./esp.img of=$out seek=$START count=$SECTORS
 
             mkdir -p ./rootImage/nix/store
             xargs -I % cp --recursive --no-dereference --preserve=links % -t ./rootImage/nix/store/ < ${pkgs.closureInfo { rootPaths = nixosConfigurations.minimal-image.config.system.build.toplevel; }}/store-paths
 
-            ${pkgs.util-linux}/bin/partx $out --nr 2 --pairs
             eval $(${pkgs.util-linux}/bin/partx $out --nr 2 --pairs)
             ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./root.img
             ${pkgs.btrfs-progs}/bin/mkfs.btrfs --rootdir ./rootImage --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
             dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS
-
-            
-            ${pkgs.mtools}/bin/mcopy -i ./esp.img /tmp/boot ::
             '';
 
           verify-image-no-vm = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
@@ -113,6 +108,8 @@
             ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
             ${pkgs.btrfs-progs}/bin/btrfs check --readonly --check-data-csum /dev/loop0p2
             ${pkgs.util-linux}/bin/mount -t btrfs /dev/loop0p2 /mnt
+            ls -la /mnt
+            ls -laR /mnt/boot
             touch $out
             '');
 
