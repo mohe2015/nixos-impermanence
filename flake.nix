@@ -38,7 +38,7 @@
             { 
               preVM = ''
                 touch $out
-                ${pkgs.qemu_kvm}/bin/qemu-img create -f raw $out 8192M
+                ${pkgs.qemu_kvm}/bin/qemu-img create -f raw $out 1024M
               '';
 
               QEMU_OPTS = "-drive file=$out,format=raw,if=virtio,cache=unsafe,werror=report";
@@ -49,12 +49,18 @@
               ${pkgs.parted}/bin/parted /dev/${pkgs.vmTools.hd} -- mkpart ESP fat32 1MB 512MB
               ${pkgs.parted}/bin/parted /dev/${pkgs.vmTools.hd} -- set 1 esp on
               ${pkgs.parted}/bin/parted /dev/${pkgs.vmTools.hd} -- mkpart root btrfs 512MB 100%
-              ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup /dev/${pkgs.vmTools.hd}2
-              ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot /dev/sda1
-              ${pkgs.util-linux}/bin/mount /dev/disk/by-label/nixos /mnt
+              ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot /dev/${pkgs.vmTools.hd}1
+              ${pkgs.coreutils}/bin/mknod /dev/btrfs-control c 10 234
+              ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label nixos --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup /dev/${pkgs.vmTools.hd}2
               ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
-              ${pkgs.util-linux}/bin/mount /dev/disk/by-label/boot /mnt/boot
-              ${pkgs.nixos-generate-config}/bin/nixos-generate-config --root /mnt
+              ${pkgs.util-linux}/bin/mount -t vfat /dev/${pkgs.vmTools.hd}1 /mnt/boot
+              ${pkgs.kmod}/bin/modprobe btrfs
+              ${pkgs.util-linux}/bin/mount -t btrfs /dev/${pkgs.vmTools.hd}2 /mnt
+              cat << EOF > /mnt/configuration.nix
+              {
+                
+              }
+              EOF
 
             '');
         };
