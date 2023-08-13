@@ -1,5 +1,5 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"; # "git+file:nixpkgs"; # "github:NixOS/nixpkgs/nixos-unstable-small"; # nixos-unstable #git+file:nixpkgs;
+  inputs.nixpkgs.url = "git+file:nixpkgs"; # "github:NixOS/nixpkgs/nixos-unstable"; # ; # "github:NixOS/nixpkgs/nixos-unstable-small"; # nixos-unstable #git+file:nixpkgs;
   inputs.home-manager = {
     url = "github:nix-community/home-manager";
     inputs.nixpkgs.follows = "nixpkgs";
@@ -29,10 +29,17 @@
         rpi4-image = nixosConfigurations.rpi4-image.config.system.build.isoImage;
 
         packages = {
-          test = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test"
-            { }
+          test = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
+            { 
+              preVM = ''
+                touch $out
+                ${pkgs.qemu_kvm}/bin/qemu-img create -f raw $out 8192M
+              '';
+
+              QEMU_OPTS = "-drive file=$out,format=raw,if=virtio,cache=unsafe,werror=report";
+            }
             ''
-              ls -la
+              ${pkgs.parted}/bin/parted /dev/${pkgs.vmTools.hd} -- mklabel gpt
             '');
         };
       }

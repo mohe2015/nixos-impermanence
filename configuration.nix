@@ -220,6 +220,7 @@
       #pkgs.kalendar
       #pkgs.libsForQt5.kdepim-addons
       pkgs.fd
+      pkgs.file
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
