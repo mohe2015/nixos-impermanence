@@ -15,16 +15,13 @@
       modules = [ ./configuration.nix ];
     };
 
-    nixosConfigurations.rpi4 = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.rpi4-image = nixpkgs.lib.nixosSystem {
+      system = "aarch64-linux";
       modules = [
-        #"${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
-        ./rpi4-configuration.nix
-        nixos-hardware.nixosModules.raspberry-pi-4
-        #{
-        #  sdImage.compressImage = false;
-        #}
+        "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal-new-kernel-no-zfs.nix"
       ];
     };
-    images.rpi4 = nixosConfigurations.rpi4.config.system.build.sdImage;
+
+    rpi4-image = nixosConfigurations.rpi4-image.config.system.build.isoImage;
   };
 }

@@ -9,8 +9,9 @@
       options = [ "compress-force=zstd" ];
     };
 
-  nixpkgs.system = "aarch64-linux";
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.supportedFilesystems = lib.mkForce [ "btrfs" "vfat" ];
 

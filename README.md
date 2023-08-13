@@ -1,3 +1,14 @@
+nix-build nixos -I nixos-config=nixos/modules/installer/sd-card/sd-image-aarch64.nix -A config.system.build.sdImage
+
+# TODO create an image with uefi partition so qemu can boot it and we can run tests with it?
+# or does it work with uboot?
+https://u-boot.readthedocs.io/en/latest/board/emulation/qemu-arm.html
+qemu-system-aarch64 -curses -machine virt -cpu cortex-a57 -bios u-boot.bin
+https://github.com/u-boot/u-boot/blob/master/board/emulation/qemu-arm/Kconfig
+
+qemu-system-aarch64 -machine help
+raspi3b
+
 # for rpi
 eval "$(ssh-agent)"
 ssh-add
