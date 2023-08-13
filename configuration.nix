@@ -221,6 +221,7 @@
       #pkgs.libsForQt5.kdepim-addons
       pkgs.fd
       pkgs.file
+      pkgs.parted
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {

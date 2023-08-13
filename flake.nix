@@ -47,17 +47,22 @@
           {
 
           } ''
-            ${pkgs.util-linux}/bin/fallocate -l 1MiB ./header.img
-            ${pkgs.util-linux}/bin/fallocate -l 512MiB ./esp.img
-            ${pkgs.util-linux}/bin/fallocate -l 1GiB ./root.img
-            ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot ./esp.img
-            ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
-            cat ./header.img ./esp.img ./root.img > $out
+            ${pkgs.util-linux}/bin/fallocate -l 2GiB $out
             ${pkgs.parted}/bin/parted $out -- mklabel gpt
             ${pkgs.parted}/bin/parted $out -- mkpart ESP fat32 1MiB 512MiB
             ${pkgs.parted}/bin/parted $out -- set 1 esp on
             ${pkgs.parted}/bin/parted $out -- mkpart root btrfs 512MiB 100%
-          '';
+
+            eval $(${pkgs.util-linux}/bin/partx $out --nr 1 --pairs)
+            ${pkgs.util-linux}/bin/fallocate -l ''${SIZE}iB ./esp.img
+            ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot ./esp.img
+            dd conv=notrunc if=./esp.img of=$out seek=$START count=$SECTORS
+
+            eval $(${pkgs.util-linux}/bin/partx $out --nr 2 --pairs)
+            ${pkgs.util-linux}/bin/fallocate -l ''${SIZE}iB ./root.img
+            ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
+            dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS
+            '';
 
           verify-image-no-vm = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
             { 
