@@ -66,6 +66,11 @@
           {
 
           } ''
+            #${pkgs.util-linux}/bin/fallocate -l 100MiB ./test.img
+            #${pkgs.parted}/bin/parted ./test.img -- mklabel gpt
+            #${pkgs.parted}/bin/parted ./test.img -- mkpart root btrfs 1MiB 100%
+            #${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./test.img
+
             echo "ID=nixos" > /build/os-release
             NO_ROOT=1 KERNEL_INSTALL_CONF_ROOT=/build SYSTEMD_OS_RELEASE=/build/os-release SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/build NIXOS_INSTALL_BOOTLOADER=1 ${nixosConfigurations.minimal-image.config.system.build.installBootLoader} ${nixosConfigurations.minimal-image.config.system.build.toplevel}
             mkdir /build/boot
@@ -73,7 +78,7 @@
             mv /build/!(boot) /build/boot
             ls -la /build/boot
 
-            ${pkgs.util-linux}/bin/fallocate -l 1GiB $out
+            ${pkgs.util-linux}/bin/fallocate -l 4GiB $out
             ${pkgs.parted}/bin/parted $out -- mklabel gpt
             ${pkgs.parted}/bin/parted $out -- mkpart ESP fat32 1MiB 100MiB
             ${pkgs.parted}/bin/parted $out -- set 1 esp on
@@ -95,9 +100,17 @@
             eval $(${pkgs.util-linux}/bin/partx $out --nr 2 --pairs)
             ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./root.img
             ${pkgs.btrfs-progs}/bin/mkfs.btrfs --rootdir ./rootImage --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
+            # did btrfs silently resize because of --rootdir?
+            FILESIZE=$(stat -c%s ./root.img)
+            if [ "$FILESIZE" != $(($SECTORS * 512)) ]; then
+              echo "The btrfs filesystem is too small! $FILESIZE < $(($SECTORS * 512))" 1>&2
+              exit 1
+            fi
+  
             dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS
 
             ls -lh
+            
             '';
 
           verify-image-no-vm = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
@@ -110,8 +123,9 @@
             ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
             ${pkgs.dosfstools}/bin/fsck.vfat -n -v -V /dev/loop0p1
             ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
-            ${pkgs.btrfs-progs}/bin/btrfs check --readonly --check-data-csum /dev/loop0p2
             ${pkgs.util-linux}/bin/mount -t btrfs /dev/loop0p2 /mnt
+            ${pkgs.btrfs-progs}/bin/btrfs filesystem resize max /mnt
+            ${pkgs.btrfs-progs}/bin/btrfs check --readonly --check-data-csum /dev/loop0p2
             ls -la /mnt
             ls -laR /mnt/boot
             touch $out
