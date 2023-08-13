@@ -9,16 +9,20 @@
   inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, flake-utils, rust-overlay, nixos-hardware, ... }@attrs: flake-utils.lib.eachDefaultSystem
-    (system:
-      let pkgs = nixpkgs.legacyPackages.${system}; in
-      rec {
-        nixosConfigurations.nixos = nixpkgs.lib.nixosSystem rec {
+  outputs = { self, nixpkgs, flake-utils, rust-overlay, nixos-hardware, ... }@attrs: nixpkgs.lib.updateManyAttrsByPath [
+    {
+      path = [ "nixosConfigurations" "nixos" ];
+      update = old: nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
           specialArgs = attrs;
           modules = [ ./configuration.nix ];
         };
-
+    }
+  ]
+  (flake-utils.lib.eachDefaultSystem
+    (system:
+      let pkgs = nixpkgs.legacyPackages.${system}; in
+      rec {
         nixosConfigurations.rpi4-image = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [
@@ -43,5 +47,5 @@
             '');
         };
       }
-    );
+    ));
 }
