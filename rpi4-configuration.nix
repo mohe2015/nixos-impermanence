@@ -1,14 +1,16 @@
 { pkgs, lib, ... }:
 
 {
-  # nested aarch64 virtualization is not nice
+  networking.hostName = "rpi4";
+
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/44444444-4444-4444-8888-888888888888";
+      fsType = "btrfs";
+    };
+
   nixpkgs.system = "aarch64-linux";
-  # https://gcc.gnu.org/onlinedocs/gccint/Configure-Terms.html
-  #nixpkgs.buildPlatform = "x86_64-linux";
-  #nixpkgs.hostPlatform = "aarch64-linux";
   documentation.nixos.enable = false;
   boot.supportedFilesystems = lib.mkForce [ "btrfs" "vfat" ];
-  sdImage.compressImage = false;
 
   hardware.raspberry-pi."4".fkms-3d.enable = true;
   hardware.raspberry-pi."4".touch-ft5406.enable = true;

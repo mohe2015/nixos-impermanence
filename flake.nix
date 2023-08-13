@@ -20,6 +20,9 @@
         "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
         ./rpi4-configuration.nix
         nixos-hardware.nixosModules.raspberry-pi-4
+        {
+          sdImage.compressImage = false;
+        }
       ];
     };
     images.rpi4 = nixosConfigurations.rpi4.config.system.build.sdImage;
