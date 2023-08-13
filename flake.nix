@@ -12,7 +12,7 @@
   outputs = { self, nixpkgs, flake-utils, rust-overlay, nixos-hardware, ... }@attrs: flake-utils.lib.eachDefaultSystem
     (system:
       let pkgs = nixpkgs.legacyPackages.${system}; in
-      {
+      rec {
         nixosConfigurations.nixos = nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
           specialArgs = attrs;
@@ -28,8 +28,13 @@
 
         rpi4-image = nixosConfigurations.rpi4-image.config.system.build.isoImage;
 
-
-        packages = { };
+        packages = {
+          test = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test"
+            { }
+            ''
+              ls -la
+            '');
+        };
       }
     );
 }
