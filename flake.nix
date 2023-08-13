@@ -22,7 +22,10 @@
   ]
   (flake-utils.lib.eachDefaultSystem
     (system:
-      let pkgs = nixpkgs.legacyPackages.${system}; in
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        pkgsAarch64 = nixpkgs.legacyPackages.aarch64-linux;
+      in
       rec {
         nixosConfigurations.rpi4-image = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
@@ -33,7 +36,7 @@
 
         rpi4-image = nixosConfigurations.rpi4-image.config.system.build.isoImage;
 
-        nixosConfigurations.minimal-image = nixpkgs.lib.nixosSystem {
+        nixosConfigurations.minimal-image = let pkgs = pkgsAarch64; in nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [
             {
@@ -81,6 +84,10 @@
             ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./root.img
             ${pkgs.btrfs-progs}/bin/mkfs.btrfs --rootdir ./rootImage --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
             dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS
+
+            mkdir boot
+            cd boot
+            ${nixosConfigurations.minimal-image.config.system.build.installBootLoader}
             '';
 
           verify-image-no-vm = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
