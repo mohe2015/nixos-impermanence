@@ -94,6 +94,7 @@
             dd conv=notrunc if=./esp.img of=$out seek=$START count=$SECTORS
 
             mkdir -p ./rootImage/nix/store
+            mkdir -p ./rootImage/boot
             xargs -I % cp --recursive --no-dereference --preserve=links % -t ./rootImage/nix/store/ < ${pkgs.closureInfo { rootPaths = nixosConfigurations.minimal-image.config.system.build.toplevel; }}/store-paths
 
             ${pkgs.util-linux}/bin/partx $out --nr 2 --pairs
@@ -120,14 +121,15 @@
             ${pkgs.kmod}/bin/modprobe loop
             ${pkgs.util-linux}/bin/losetup --partscan /dev/loop0 ${image-no-vm}
             ${pkgs.parted}/bin/parted /dev/loop0 -- unit MiB print
-            ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
             ${pkgs.dosfstools}/bin/fsck.vfat -n -v -V /dev/loop0p1
-            ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
-            ${pkgs.util-linux}/bin/mount -t btrfs /dev/loop0p2 /mnt
-            ${pkgs.btrfs-progs}/bin/btrfs filesystem resize max /mnt
             ${pkgs.btrfs-progs}/bin/btrfs check --readonly --check-data-csum /dev/loop0p2
+            ${pkgs.coreutils}/bin/mkdir -p /mnt
+            ${pkgs.util-linux}/bin/mount -t btrfs /dev/loop0p2 /mnt
+            ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
+            ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
             ls -la /mnt
-            ls -laR /mnt/boot
+            ls -la /mnt/nix/store/
+            ls -laR /mnt/boot/
             touch $out
             '');
 
