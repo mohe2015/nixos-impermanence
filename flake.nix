@@ -9,6 +9,7 @@
   inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
+  # lib.attrsets.recursiveUpdate
   outputs = { self, nixpkgs, flake-utils, rust-overlay, nixos-hardware, ... }@attrs: nixpkgs.lib.updateManyAttrsByPath [
     {
       path = [ "nixosConfigurations" "nixos" ];
@@ -43,7 +44,18 @@
               QEMU_OPTS = "-drive file=$out,format=raw,if=virtio,cache=unsafe,werror=report";
             }
             ''
+              # https://nixos.org/manual/nixos/unstable/
               ${pkgs.parted}/bin/parted /dev/${pkgs.vmTools.hd} -- mklabel gpt
+              ${pkgs.parted}/bin/parted /dev/${pkgs.vmTools.hd} -- mkpart ESP fat32 1MB 512MB
+              ${pkgs.parted}/bin/parted /dev/${pkgs.vmTools.hd} -- set 1 esp on
+              ${pkgs.parted}/bin/parted /dev/${pkgs.vmTools.hd} -- mkpart root btrfs 512MB 100%
+              ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup /dev/${pkgs.vmTools.hd}2
+              ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot /dev/sda1
+              ${pkgs.util-linux}/bin/mount /dev/disk/by-label/nixos /mnt
+              ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
+              ${pkgs.util-linux}/bin/mount /dev/disk/by-label/boot /mnt/boot
+              ${pkgs.nixos-generate-config}/bin/nixos-generate-config --root /mnt
+
             '');
         };
       }
