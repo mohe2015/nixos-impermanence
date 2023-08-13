@@ -1,5 +1,5 @@
 {
-  inputs.nixpkgs.url = "git+file:nixpkgs"; # "github:NixOS/nixpkgs/nixos-unstable-small"; # nixos-unstable #git+file:nixpkgs;
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"; # "git+file:nixpkgs"; # "github:NixOS/nixpkgs/nixos-unstable-small"; # nixos-unstable #git+file:nixpkgs;
   inputs.home-manager = {
     url = "github:nix-community/home-manager";
     inputs.nixpkgs.follows = "nixpkgs";
@@ -17,12 +17,12 @@
 
     nixosConfigurations.rpi4 = nixpkgs.lib.nixosSystem {
       modules = [
-        "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
+        #"${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
         ./rpi4-configuration.nix
         nixos-hardware.nixosModules.raspberry-pi-4
-        {
-          sdImage.compressImage = false;
-        }
+        #{
+        #  sdImage.compressImage = false;
+        #}
       ];
     };
     images.rpi4 = nixosConfigurations.rpi4.config.system.build.sdImage;
