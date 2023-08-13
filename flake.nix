@@ -78,8 +78,9 @@
             ${pkgs.parted}/bin/parted $out -- mkpart ESP fat32 1MiB 100MiB
             ${pkgs.parted}/bin/parted $out -- set 1 esp on
             ${pkgs.parted}/bin/parted $out -- mkpart root btrfs 100MiB 100%
-            ${pkgs.parted}/bin/parted $out -- print
+            ${pkgs.parted}/bin/parted $out -- unit MiB print
 
+            ${pkgs.util-linux}/bin/partx $out --nr 1 --pairs
             eval $(${pkgs.util-linux}/bin/partx $out --nr 1 --pairs)
             ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./esp.img
             ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n BOOT ./esp.img
@@ -90,10 +91,13 @@
             mkdir -p ./rootImage/nix/store
             xargs -I % cp --recursive --no-dereference --preserve=links % -t ./rootImage/nix/store/ < ${pkgs.closureInfo { rootPaths = nixosConfigurations.minimal-image.config.system.build.toplevel; }}/store-paths
 
+            ${pkgs.util-linux}/bin/partx $out --nr 2 --pairs
             eval $(${pkgs.util-linux}/bin/partx $out --nr 2 --pairs)
             ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./root.img
             ${pkgs.btrfs-progs}/bin/mkfs.btrfs --rootdir ./rootImage --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
             dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS
+
+            ls -lh
             '';
 
           verify-image-no-vm = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
@@ -102,7 +106,7 @@
             ''
             ${pkgs.kmod}/bin/modprobe loop
             ${pkgs.util-linux}/bin/losetup --partscan /dev/loop0 ${image-no-vm}
-            ${pkgs.parted}/bin/parted /dev/loop0 -- print
+            ${pkgs.parted}/bin/parted /dev/loop0 -- unit MiB print
             ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
             ${pkgs.dosfstools}/bin/fsck.vfat -n -v -V /dev/loop0p1
             ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
