@@ -64,12 +64,10 @@
             }
             ''
             ${pkgs.kmod}/bin/modprobe loop
-            ${pkgs.coreutils}/bin/ls -la /dev/loop*
-            ${pkgs.coreutils}/bin/ls -la ${image-no-vm}
-            ${pkgs.parted}/bin/parted ${image-no-vm} -- print
-            ${pkgs.util-linux}/bin/losetup --partscan ${image-no-vm}
+            ${pkgs.util-linux}/bin/losetup --partscan /dev/loop0 ${image-no-vm}
             ${pkgs.parted}/bin/parted /dev/loop0 -- print
             ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
+            ${pkgs.dosfstools}/bin/fsck.vfat -n -v -V /dev/loop0p1
             ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
             ${pkgs.util-linux}/bin/mount -t btrfs /dev/loop0p2 /mnt
             '');
