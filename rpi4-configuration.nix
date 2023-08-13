@@ -10,22 +10,21 @@
     };
 
   nixpkgs.system = "aarch64-linux";
-  documentation.nixos.enable = false;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   boot.supportedFilesystems = lib.mkForce [ "btrfs" "vfat" ];
 
+  hardware.deviceTree.enable = true;
   hardware.raspberry-pi."4".fkms-3d.enable = true;
   hardware.raspberry-pi."4".touch-ft5406.enable = true;
   hardware.raspberry-pi."4".backlight.enable = true;
-  #hardware.raspberry-pi."4".audio.enable = true;
-  # https://github.com/NixOS/nixos-hardware/blob/430a56dd16fe583a812b2df44dca002acab2f4f6/raspberry-pi/4/dwc2.nix
+  hardware.raspberry-pi."4".apply-overlays-dtmerge.enable = true;
 
   # gnome is too big for touchscreen
   services.xserver = {
     enable = true;
     displayManager.sddm.enable = true;
-    desktopManager.plasma5.mobile.enable = true;
-    desktopManager.plasma5.mobile.installRecommendedSoftware = true;
-    # maybe plasma mobile?
+    desktopManager.plasma5.enable = true;
   };
 
   users.mutableUsers = false;
@@ -50,6 +49,12 @@
     enable = true;
     startWhenNeeded = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    git
+    libraspberrypi
+    raspberrypi-eeprom
+  ];
 
   system.stateVersion = "23.11";
 }
