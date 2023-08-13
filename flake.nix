@@ -33,6 +33,15 @@
 
         rpi4-image = nixosConfigurations.rpi4-image.config.system.build.isoImage;
 
+        nixosConfigurations.minimal-image = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          modules = [
+            {
+              boot.loader.systemd-boot.enable = true;
+            }
+          ];
+        };
+
         packages = {
           test = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
             { 
@@ -51,17 +60,19 @@
               ${pkgs.parted}/bin/parted /dev/${pkgs.vmTools.hd} -- mkpart root btrfs 512MB 100%
               ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot /dev/${pkgs.vmTools.hd}1
               ${pkgs.coreutils}/bin/mknod /dev/btrfs-control c 10 234
-              ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label nixos --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup /dev/${pkgs.vmTools.hd}2
+              ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup /dev/${pkgs.vmTools.hd}2
               ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
               ${pkgs.util-linux}/bin/mount -t vfat /dev/${pkgs.vmTools.hd}1 /mnt/boot
               ${pkgs.kmod}/bin/modprobe btrfs
-              ${pkgs.util-linux}/bin/mount -t btrfs /dev/${pkgs.vmTools.hd}2 /mnt
-              cat << EOF > /mnt/configuration.nix
+              ${pkgs.util-linux}/bin/mount -t btrfs -o compress-force=zstd /dev/${pkgs.vmTools.hd}2 /mnt
+              mkdir -p /mnt/etc/nixos
+              cat << EOF > /mnt/etc/nixos/configuration.nix
               {
-                
+                boot.loader.systemd-boot.enable = true;
               }
               EOF
-
+              PATH=${pkgs.nix}/bin:$PATH
+              ${nixosConfigurations.minimal-image.config.system.build.nixos-install}/bin/nixos-install --no-root-passwd
             '');
         };
       }
