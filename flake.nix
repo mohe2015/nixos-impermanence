@@ -75,7 +75,7 @@
             NO_ROOT=1 KERNEL_INSTALL_CONF_ROOT=/build SYSTEMD_OS_RELEASE=/build/os-release SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/build NIXOS_INSTALL_BOOTLOADER=1 ${nixosConfigurations.minimal-image.config.system.build.installBootLoader} ${nixosConfigurations.minimal-image.config.system.build.toplevel}
             mkdir /build/boot
             shopt -s extglob
-            mv /build/!(boot) /build/boot
+            mv /build/!(boot) /build/boot/
             ls -la /build/boot
 
             ${pkgs.util-linux}/bin/fallocate -l 4GiB $out
@@ -89,8 +89,8 @@
             eval $(${pkgs.util-linux}/bin/partx $out --nr 1 --pairs)
             ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./esp.img
             ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n BOOT ./esp.img
-            du -sh /build/boot
-            ${pkgs.mtools}/bin/mcopy -i ./esp.img /build/boot ::
+            # TODO FIXME EFI does not seem to be copied
+            ${pkgs.mtools}/bin/mcopy -s -i ./esp.img /build/boot/ ::
             dd conv=notrunc if=./esp.img of=$out seek=$START count=$SECTORS
 
             mkdir -p ./rootImage/nix/store
@@ -108,10 +108,7 @@
               exit 1
             fi
   
-            dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS
-
-            ls -lh
-            
+            dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS  
             '';
 
           verify-image-no-vm = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
@@ -127,9 +124,7 @@
             ${pkgs.util-linux}/bin/mount -t btrfs /dev/loop0p2 /mnt
             ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
             ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
-            ls -la /mnt
-            ls -la /mnt/nix/store/
-            ls -laR /mnt/boot/
+            ls -laR /mnt/boot/boot/
             touch $out
             '');
 
