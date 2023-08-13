@@ -4,7 +4,8 @@
   networking.hostName = "rpi4";
 
   fileSystems."/" =
-    { device = "/dev/disk/by-label/NIXOS_SD";
+    {
+      device = "/dev/disk/by-label/NIXOS_SD";
       fsType = lib.mkForce "btrfs";
       options = [ "compress-force=zstd" ];
     };

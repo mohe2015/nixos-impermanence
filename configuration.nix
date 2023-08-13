@@ -13,15 +13,15 @@
       impermanence.nixosModules.impermanence
     ];
 
-#  services.beesd = {
-#    filesystems = {
-#      backup1 = {
-#        spec = "/mnt/nixstore/";
- #       hashTableSizeMB = 4096;
- ##       extraOptions = [ "--thread-count" "1" "--loadavg-target" "2" ];
- #     };
- #   };
- # };
+  #  services.beesd = {
+  #    filesystems = {
+  #      backup1 = {
+  #        spec = "/mnt/nixstore/";
+  #       hashTableSizeMB = 4096;
+  ##       extraOptions = [ "--thread-count" "1" "--loadavg-target" "2" ];
+  #     };
+  #   };
+  # };
 
   zramSwap = {
     enable = true;
@@ -484,10 +484,10 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-  
-virtualisation.libvirtd.enable = true;
-programs.dconf.enable = true;
-environment.systemPackages = with pkgs; [ virt-manager ];
+
+  virtualisation.libvirtd.enable = true;
+  programs.dconf.enable = true;
+  environment.systemPackages = with pkgs; [ virt-manager ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
