@@ -6,6 +6,7 @@
   fileSystems."/" =
     { device = "/dev/disk/by-label/NIXOS_SD";
       fsType = lib.mkForce "btrfs";
+      options = [ "compress-force=zstd" ];
     };
 
   nixpkgs.system = "aarch64-linux";
