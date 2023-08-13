@@ -53,13 +53,15 @@
             ${pkgs.parted}/bin/parted $out -- set 1 esp on
             ${pkgs.parted}/bin/parted $out -- mkpart root btrfs 512MiB 100%
 
+            ${pkgs.util-linux}/bin/partx $out --nr 1 --pairs
             eval $(${pkgs.util-linux}/bin/partx $out --nr 1 --pairs)
-            ${pkgs.util-linux}/bin/fallocate -l ''${SIZE}iB ./esp.img
+            ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./esp.img
             ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n boot ./esp.img
             dd conv=notrunc if=./esp.img of=$out seek=$START count=$SECTORS
 
+            ${pkgs.util-linux}/bin/partx $out --nr 2 --pairs
             eval $(${pkgs.util-linux}/bin/partx $out --nr 2 --pairs)
-            ${pkgs.util-linux}/bin/fallocate -l ''${SIZE}iB ./root.img
+            ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./root.img
             ${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
             dd conv=notrunc if=./root.img of=$out seek=$START count=$SECTORS
             '';
@@ -74,7 +76,9 @@
             ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
             ${pkgs.dosfstools}/bin/fsck.vfat -n -v -V /dev/loop0p1
             ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
+            ${pkgs.btrfs-progs}/bin/btrfs check --readonly --check-data-csum /dev/loop0p2
             ${pkgs.util-linux}/bin/mount -t btrfs /dev/loop0p2 /mnt
+            touch $out
             '');
 
           test = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
