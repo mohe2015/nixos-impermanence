@@ -12,10 +12,12 @@
 
   hardware.raspberry-pi."4".fkms-3d.enable = true;
 
+  # gnome is too big for touchscreen
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
+    displayManager.sddm.enable = true;
+    desktopManager.plasma5.enable = true;
+    # maybe plasma mobile?
   };
 
   users.mutableUsers = false;
