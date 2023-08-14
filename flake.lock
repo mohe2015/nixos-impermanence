@@ -90,8 +90,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1691966075,
+        "lastModified": 1692019803,
         "narHash": "sha256-Ar5vDnL0kQ9qDTELE0SFbInQTT3hQ2W8KgovAKHQvgs=",
+        "ref": "refs/heads/my-small",
+        "rev": "54a807ed878134a37fc6c9aec1e0e42779d22577",
+        "revCount": 512987,
         "type": "git",
         "url": "file:nixpkgs"
       },

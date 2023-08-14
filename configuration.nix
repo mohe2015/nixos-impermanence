@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, home-manager, impermanence, rust-overlay, ... }:
+{ config, pkgs, lib, nixpkgs, home-manager, impermanence, rust-overlay, ... }:
 
 {
   imports =
@@ -486,8 +486,10 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-
-  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu.ovmf.packages = [ pkgs.OVMFFull.fd nixpkgs.legacyPackages.aarch64-linux.OVMF.fd ];
+  };
   programs.dconf.enable = true;
   environment.systemPackages = with pkgs; [ virt-manager ];
 
