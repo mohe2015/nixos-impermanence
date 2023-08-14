@@ -153,7 +153,8 @@
                 ls -laR /mnt/boot/
                 ln -s ${image-no-vm} $out
               '');
-
+            # https://github.com/NixOS/nixpkgs/blob/71bf61d89b23ce33bd1334ca670ac20ff21008bb/nixos/lib/make-single-disk-zfs-image.nix#L113
+            # TODO FIXME https://github.com/NixOS/nixpkgs/blob/71bf61d89b23ce33bd1334ca670ac20ff21008bb/nixos/lib/make-disk-image.nix#L16
             test = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
               {
                 nativeBuildInputs = [
