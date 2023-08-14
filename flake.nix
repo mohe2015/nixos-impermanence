@@ -66,17 +66,25 @@
           {
 
           } ''
+            set -ex
             #${pkgs.util-linux}/bin/fallocate -l 100MiB ./test.img
             #${pkgs.parted}/bin/parted ./test.img -- mklabel gpt
             #${pkgs.parted}/bin/parted ./test.img -- mkpart root btrfs 1MiB 100%
             #${pkgs.btrfs-progs}/bin/mkfs.btrfs --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./test.img
 
             echo "ID=nixos" > /build/os-release
-            NO_ROOT=1 KERNEL_INSTALL_CONF_ROOT=/build SYSTEMD_OS_RELEASE=/build/os-release SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/build NIXOS_INSTALL_BOOTLOADER=1 ${nixosConfigurations.minimal-image.config.system.build.installBootLoader} ${nixosConfigurations.minimal-image.config.system.build.toplevel}
+            mkdir -p /build/nix/var/nix/profiles/
+            touch /build/nix/var/nix/profiles/system.lock
+            ln -s ${nixosConfigurations.minimal-image.config.system.build.toplevel} /build/nix/var/nix/profiles/system
+            ln -s ${nixosConfigurations.minimal-image.config.system.build.toplevel} /build/nix/var/nix/profiles/system-1
+            #${pkgs.nix}/bin/nix-env -p /build/nix/var/nix/profiles/system --set ${nixosConfigurations.minimal-image.config.system.build.toplevel}
+            XDG_STATE_HOME=/build/nix/var NIX_PREFIX=/build/nix NIX_STORE_DIR=/build/nix/store NIX_DATA_DIR=/build/nix/share NIX_LOG_DIR=/build/nix/var/log/nix NIX_STATE_DIR=/build/nix/var/nix NIX_CONF_DIR=/build/nix/etc/nix NO_ROOT=1 KERNEL_INSTALL_CONF_ROOT=/build SYSTEMD_OS_RELEASE=/build/os-release SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/build NIXOS_INSTALL_BOOTLOADER=1 ${nixosConfigurations.minimal-image.config.system.build.installBootLoader} ${nixosConfigurations.minimal-image.config.system.build.toplevel}
             mkdir /build/boot
             shopt -s extglob
             mv /build/!(boot) /build/boot/
-            ls -la /build/boot
+            ls -laR /build/boot
+
+            cat /build/boot/loader/**/*
 
             ${pkgs.util-linux}/bin/fallocate -l 4GiB $out
             ${pkgs.parted}/bin/parted $out -- mklabel gpt
