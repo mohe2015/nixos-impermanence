@@ -125,7 +125,7 @@
             ${pkgs.coreutils}/bin/mkdir -p /mnt/boot
             ${pkgs.util-linux}/bin/mount -t vfat /dev/loop0p1 /mnt/boot
             ls -laR /mnt/boot/boot/
-            touch $out
+            ln -s ${image-no-vm} $out
             '');
 
           test = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
