@@ -57,10 +57,10 @@
   ];
 
   services.minio = {
-    enable = false;
+    enable = true;
   };
   services.gitlab-runner = {
-    enable = false;
+    enable = true;
     settings = {
       concurrent = 50;
     };
@@ -93,10 +93,13 @@
 
   services.flatpak.enable = true;
 
-  #virtualisation.docker.rootless = {
-  #  enable = true;
-  #  setSocketVariable = true;
-  #};
+  virtualisation.docker = {
+    enable = true;
+    listenOptions = [
+      "/run/docker.sock"
+      "0.0.0.0:2375"
+    ];
+  };
 
   virtualisation = {
     podman = {
@@ -471,7 +474,7 @@
 
   # Open ports in the firewall.
   networking.firewall.logRefusedConnections = false;
-  networking.firewall.allowedTCPPorts = [ 2375 ];
+  networking.firewall.allowedTCPPorts = [ ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 1714; to = 1764; } # KDE Connect
   ];
