@@ -8,9 +8,10 @@
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
   inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs.nix.url = "github:NixOS/nix";
 
   # lib.attrsets.recursiveUpdate
-  outputs = { self, nixpkgs, flake-utils, rust-overlay, nixos-hardware, ... }@attrs: nixpkgs.lib.updateManyAttrsByPath [
+  outputs = { self, nixpkgs, flake-utils, rust-overlay, nixos-hardware, nix, ... }@attrs: nixpkgs.lib.updateManyAttrsByPath [
     {
       path = [ "nixosConfigurations" "nixos" ];
       update = old: nixpkgs.lib.nixosSystem rec {
@@ -37,7 +38,7 @@
           rpi4-image = nixosConfigurations.rpi4-image.config.system.build.isoImage;
 
           nixosConfigurations.minimal-image = let pkgs = pkgsAarch64; in nixpkgs.lib.nixosSystem {
-            system = "aarch64-linux";
+            system = "x86_64-linux"; # TODO FIXME
             modules = [
               {
                 networking.hostName = "rpi4";
@@ -77,7 +78,6 @@
                   displayManager.sddm.enable = true;
                   desktopManager.plasma5.enable = true;
                 };
-
 
                 documentation.enable = false;
 
@@ -126,6 +126,7 @@
               ${pkgs.util-linux}/bin/partx $out --nr 2 --pairs
               eval $(${pkgs.util-linux}/bin/partx $out --nr 2 --pairs)
               ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./root.img
+              # Don't use this - this doesn't support compression and not deduplication which is really bad
               ${pkgs.btrfs-progs}/bin/mkfs.btrfs --rootdir ./rootImage --shrink --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
               # did btrfs silently resize because of --rootdir?
               FILESIZE=$(stat -c%s ./root.img)
@@ -155,9 +156,15 @@
 
             test = pkgs.vmTools.runInLinuxVM (pkgs.runCommand "test.img"
               {
+                nativeBuildInputs = [
+                  pkgs.nix
+                ];
+
+                memSize = "4G"; # increase when store size grows
+
                 preVM = ''
                   touch $out
-                  ${pkgs.qemu_kvm}/bin/qemu-img create -f raw $out 1024M
+                  ${pkgs.qemu_kvm}/bin/qemu-img create -f raw $out 5G
                 '';
 
                 QEMU_OPTS = "-drive file=$out,format=raw,if=virtio,cache=unsafe,werror=report";
@@ -175,14 +182,13 @@
                 ${pkgs.util-linux}/bin/mount -t vfat /dev/${pkgs.vmTools.hd}1 /mnt/boot
                 ${pkgs.kmod}/bin/modprobe btrfs
                 ${pkgs.util-linux}/bin/mount -t btrfs -o compress-force=zstd /dev/${pkgs.vmTools.hd}2 /mnt
-                mkdir -p /mnt/etc/nixos
-                cat << EOF > /mnt/etc/nixos/configuration.nix
-                {
-                  boot.loader.systemd-boot.enable = true;
-                }
-                EOF
-                PATH=${pkgs.nix}/bin:$PATH
-                ${nixosConfigurations.minimal-image.config.system.build.nixos-install}/bin/nixos-install --no-root-passwd
+
+                nix-store < ${pkgs.closureInfo { rootPaths = [ nixosConfigurations.minimal-image.config.system.build.toplevel ]; }}/registration \
+                  --load-db \
+                  --option build-users-group ""
+
+                mkdir -p /mnt/
+                ${nixosConfigurations.minimal-image.config.system.build.nixos-install}/bin/nixos-install --option build-users-group "" --substituters "" --no-root-passwd --root /mnt --system ${nixosConfigurations.minimal-image.config.system.build.toplevel}
               '');
           };
         }
