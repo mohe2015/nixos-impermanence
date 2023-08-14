@@ -56,6 +56,8 @@
                 fsType = "btrfs";
               };
 
+              documentation.enable = false;
+
               system.stateVersion = "23.11";
             }
           ];
@@ -74,17 +76,20 @@
 
             echo "ID=nixos" > /build/os-release
             mkdir -p /build/nix/var/nix/profiles/
-            touch /build/nix/var/nix/profiles/system.lock
+            #touch /build/nix/var/nix/profiles/system.lock
             ln -s ${nixosConfigurations.minimal-image.config.system.build.toplevel} /build/nix/var/nix/profiles/system
-            ln -s ${nixosConfigurations.minimal-image.config.system.build.toplevel} /build/nix/var/nix/profiles/system-1
-            #${pkgs.nix}/bin/nix-env -p /build/nix/var/nix/profiles/system --set ${nixosConfigurations.minimal-image.config.system.build.toplevel}
+            ln -s ${nixosConfigurations.minimal-image.config.system.build.toplevel} /build/nix/var/nix/profiles/system-1-link
+            # probably nix store not registered so it doesnt find stuff
+            #NIX_STATE_DIR=/build/nix/var/nix ${pkgs.nix}/bin/nix-env -p /build/nix/var/nix/profiles/system --set ${nixosConfigurations.minimal-image.config.system.build.toplevel}
             XDG_STATE_HOME=/build/nix/var NIX_PREFIX=/build/nix NIX_STORE_DIR=/build/nix/store NIX_DATA_DIR=/build/nix/share NIX_LOG_DIR=/build/nix/var/log/nix NIX_STATE_DIR=/build/nix/var/nix NIX_CONF_DIR=/build/nix/etc/nix NO_ROOT=1 KERNEL_INSTALL_CONF_ROOT=/build SYSTEMD_OS_RELEASE=/build/os-release SYSTEMD_RELAX_ESP_CHECKS=1 SYSTEMD_ESP_PATH=/build NIXOS_INSTALL_BOOTLOADER=1 ${nixosConfigurations.minimal-image.config.system.build.installBootLoader} ${nixosConfigurations.minimal-image.config.system.build.toplevel}
             mkdir /build/boot
             shopt -s extglob
             mv /build/!(boot) /build/boot/
             ls -laR /build/boot
 
+            cat /build/boot/loader/*
             cat /build/boot/loader/**/*
+            exit 1
 
             ${pkgs.util-linux}/bin/fallocate -l 4GiB $out
             ${pkgs.parted}/bin/parted $out -- mklabel gpt
