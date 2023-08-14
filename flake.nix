@@ -104,7 +104,7 @@
               shopt -s extglob
               mv /build/!(boot|nix) /build/boot/
 
-              ${pkgs.util-linux}/bin/fallocate -l 12GiB $out
+              ${pkgs.coreutils}/bin/truncate -s 10GiB $out
               ${pkgs.parted}/bin/parted $out -- mklabel gpt
               ${pkgs.parted}/bin/parted $out -- mkpart ESP fat32 1MiB 100MiB
               ${pkgs.parted}/bin/parted $out -- set 1 esp on
@@ -121,15 +121,15 @@
 
               mkdir -p ./rootImage/nix/store
               mkdir -p ./rootImage/boot
-              xargs -I % cp --recursive --no-dereference --preserve=links % -t ./rootImage/nix/store/ < ${pkgs.closureInfo { rootPaths = nixosConfigurations.minimal-image.config.system.build.toplevel; }}/store-paths
+              xargs -I % cp -a --reflink=auto % -t ./rootImage/nix/store/ < ${pkgs.closureInfo { rootPaths = nixosConfigurations.minimal-image.config.system.build.toplevel; }}/store-paths
 
               ${pkgs.util-linux}/bin/partx $out --nr 2 --pairs
               eval $(${pkgs.util-linux}/bin/partx $out --nr 2 --pairs)
               ${pkgs.util-linux}/bin/fallocate -l $(($SECTORS * 512)) ./root.img
-              ${pkgs.btrfs-progs}/bin/mkfs.btrfs --rootdir ./rootImage --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
+              ${pkgs.btrfs-progs}/bin/mkfs.btrfs --rootdir ./rootImage --shrink --label NIXOS_SD --uuid 44444444-4444-4444-8888-888888888888 --checksum xxhash --data single --metadata dup ./root.img
               # did btrfs silently resize because of --rootdir?
               FILESIZE=$(stat -c%s ./root.img)
-              if [ "$FILESIZE" != $(($SECTORS * 512)) ]; then
+              if [ "$FILESIZE" > $(($SECTORS * 512)) ]; then
                 echo "The btrfs filesystem is too small! $(($SECTORS * 512)) < $FILESIZE" 1>&2
                 exit 1
               fi
