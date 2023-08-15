@@ -225,6 +225,9 @@
       pkgs.fd
       pkgs.file
       pkgs.parted
+      pkgs.rnix-lsp
+      pkgs.nil
+      pkgs.nixd
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
