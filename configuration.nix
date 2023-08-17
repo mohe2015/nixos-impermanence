@@ -228,6 +228,7 @@
       pkgs.rnix-lsp
       pkgs.nil
       pkgs.nixd
+      pkgs.prismlauncher
     ];
 
     home.persistence."/nix/persistent/home/moritz" = {
@@ -274,6 +275,7 @@
         ".local/share/godot"
         ".config/godot"
         "Games"
+        ".local/share/PrismLauncher"
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
