@@ -132,8 +132,6 @@
     "android-studio-canary"
   ];
 
-  programs.fuse.userAllowOther = true;
-
   programs.steam.enable = false;
 
   home-manager.users.moritz = {
@@ -231,8 +229,8 @@
       pkgs.prismlauncher
     ];
 
+    # /run/current-system/activate
     home.persistence."/nix/persistent/home/moritz" = {
-      allowOther = true;
       directories = [
         "Android"
         "AndroidStudioProjects"
