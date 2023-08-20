@@ -187,8 +187,8 @@
       #pkgs.bubblewrap
       pkgs.chromium
       #pkgs.tor-browser-bundle-bin
-      #pkgs.texstudio
-      #pkgs.texlive.combined.scheme-full
+      pkgs.texstudio
+      pkgs.texlive.combined.scheme-full
       pkgs.signal-desktop
       pkgs.xournalpp
       (pkgs.rust-bin.stable.latest.default.override {
@@ -227,6 +227,8 @@
       pkgs.nil
       pkgs.nixd
       pkgs.prismlauncher
+      pkgs.gnumake
+      pkgs.ecryptfs
     ];
 
     # /run/current-system/activate
@@ -315,6 +317,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
+
+  boot.kernelModules = ["ecryptfs"];
 
   # Setup keyfile
   boot.initrd.secrets = {
