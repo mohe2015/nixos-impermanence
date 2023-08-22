@@ -23,6 +23,10 @@
   #   };
   # };
 
+  boot.supportedFilesystems = [ "ecryptfs" ];
+
+  programs.fuse.userAllowOther = true;
+
   zramSwap = {
     enable = true;
     memoryPercent = 200;
@@ -103,7 +107,7 @@
 
   virtualisation = {
     podman = {
-      enable = false;
+      enable = true;
       defaultNetwork.settings.dns_enabled = true;
     };
   };
@@ -130,6 +134,7 @@
     "vscode"
     "android-studio-stable"
     "android-studio-canary"
+    "veracrypt"
   ];
 
   programs.steam.enable = false;
@@ -165,10 +170,16 @@
       };
       bash = {
         enable = true;
-
       };
-      nix-index.enable = true;
+     gpg.enable = true;
+     nix-index.enable = true;
     };
+
+      services.gpg-agent = {
+        enable = true;
+        enableSshSupport = true;
+        enableBashIntegration = true;
+      };
 
     home.packages = [
       pkgs.btrfs-progs
@@ -229,10 +240,12 @@
       pkgs.prismlauncher
       pkgs.gnumake
       pkgs.ecryptfs
+      pkgs.veracrypt
     ];
 
     # /run/current-system/activate
     home.persistence."/nix/persistent/home/moritz" = {
+      allowOther = true;
       directories = [
         "Android"
         "AndroidStudioProjects"
@@ -276,6 +289,8 @@
         ".config/godot"
         "Games"
         ".local/share/PrismLauncher"
+        ".ecryptfs"
+        ".Private"
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
