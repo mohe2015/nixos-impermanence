@@ -23,6 +23,18 @@
   #   };
   # };
 
+  security.pam.loginLimits = [{
+    domain = "*";
+    type = "soft";
+    item = "nofile";
+    value = "52428800";
+  } {
+    domain = "*";
+    type = "hard";
+    item = "nofile";
+    value = "52428800";
+  }];
+
   boot.supportedFilesystems = [ "ecryptfs" ];
 
   programs.fuse.userAllowOther = true;
