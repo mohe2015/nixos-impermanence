@@ -28,12 +28,13 @@
     type = "soft";
     item = "nofile";
     value = "52428800";
-  } {
-    domain = "*";
-    type = "hard";
-    item = "nofile";
-    value = "52428800";
-  }];
+  }
+    {
+      domain = "*";
+      type = "hard";
+      item = "nofile";
+      value = "52428800";
+    }];
 
   boot.supportedFilesystems = [ "ecryptfs" ];
 
@@ -159,6 +160,7 @@
       QT_QPA_PLATFORM = "wayland";
       CLUTTER_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
+      #NIXOS_OZONE_WL = "1";
     };
 
     home.sessionPath = [
@@ -183,15 +185,15 @@
       bash = {
         enable = true;
       };
-     gpg.enable = true;
-     nix-index.enable = true;
+      gpg.enable = true;
+      nix-index.enable = true;
     };
 
-      services.gpg-agent = {
-        enable = true;
-        enableSshSupport = true;
-        enableBashIntegration = true;
-      };
+    services.gpg-agent = {
+      enable = true;
+      enableSshSupport = true;
+      enableBashIntegration = true;
+    };
 
     home.packages = [
       pkgs.btrfs-progs
@@ -205,7 +207,7 @@
       #pkgs.discord
       #pkgs.gimp
       pkgs.libreoffice-fresh
-      pkgs.betterbird
+      pkgs.thunderbird
       pkgs.vscode
       #pkgs.bubblewrap
       pkgs.chromium
@@ -345,7 +347,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
-  boot.kernelModules = ["ecryptfs"];
+  boot.kernelModules = [ "ecryptfs" ];
 
   # Setup keyfile
   boot.initrd.secrets = {
@@ -379,6 +381,12 @@
         auth = ''
           ssid="MagentaWLAN-L6J9"
           psk="@HOME_PASSWORD@"
+        '';
+      };
+      A = {
+        auth = ''
+          ssid="@A_SSID@"
+          psk="@A_PASSWORD@"
         '';
       };
     };
