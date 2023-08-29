@@ -114,7 +114,7 @@
   virtualisation.docker = {
     enable = true;
     daemon.settings = {
-      seccomp = "unconfined"; # callgrind in docker
+      seccomp-profile = ./moby-seccomp-default.json; # callgrind in docker
     };
     listenOptions = [
       "/run/docker.sock"
@@ -257,8 +257,7 @@
       pkgs.nixd
       pkgs.prismlauncher
       pkgs.gnumake
-      pkgs.ecryptfs
-      pkgs.veracrypt
+      pkgs.jq
     ];
 
     # /run/current-system/activate
