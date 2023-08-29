@@ -155,6 +155,7 @@
   ];
 
   programs.wireshark.enable = true;
+  programs.wireshark.package = pkgs.wireshark;
 
   programs.steam.enable = false;
 
@@ -266,50 +267,50 @@
     home.persistence."/nix/persistent/home/moritz" = {
       allowOther = true;
       directories = [
-        "Android"
-        "AndroidStudioProjects"
-        "Downloads"
-        "Music"
-        "Pictures"
-        "Documents"
-        "Videos"
-        ".mozilla"
-        ".config/libreoffice"
-        ".local/share/kscreen" # start on external screen by default
-        ".local/share/konsole" # profile with infinite scrollback
-        ".ssh"
-        ".local/share/Trash"
-        ".local/share/Anki2"
+        { directory = ".local/state/home-manager"; method = "bindfs"; }
+        { directory = "Android"; method = "symlink"; }
+        { directory = "AndroidStudioProjects"; method = "symlink"; }
+        { directory = "Downloads"; method = "symlink"; }
+        { directory = "Music"; method = "symlink"; }
+        { directory = "Pictures"; method = "symlink"; }
+        { directory = "Documents"; method = "symlink"; }
+        { directory = "Videos"; method = "symlink"; }
+        { directory = ".mozilla"; method = "symlink"; }
+        { directory = ".config/libreoffice"; method = "symlink"; }
+        { directory = ".local/share/kscreen"; method = "symlink"; } # start on external screen by default
+        { directory = ".local/share/konsole"; method = "symlink"; } # profile with infinite scrollback
+        { directory = ".ssh"; method = "symlink"; }
+        { directory = ".local/share/Trash"; method = "symlink"; }
+        { directory = ".local/share/Anki2"; method = "symlink"; }
         # found using
         # systemctl --user stop pipewire.service
         # systemctl --user stop pipewire-pulse.service
-        ".local/state/wireplumber" # restore audio volumes
-        ".local/state/home-manager"
-        ".local/share/docker"
-        ".config/discord" # "config"
-        ".mozilla"
-        ".config/VSCodium" # "config"
-        ".config/Code"
-        ".vscode"
-        ".vscode-oss"
-        ".steam"
-        ".local/share/Steam"
-        ".thunderbird"
-        ".config/chromium/"
-        ".config/easyeffects"
-        ".cargo"
-        #".rustup"
-        ".local/share/tor-browser"
-        ".config/Signal"
-        ".local/share/flatpak/"
-        ".config/heroic/"
-        ".config/legendary"
-        ".local/share/godot"
-        ".config/godot"
-        "Games"
-        ".local/share/PrismLauncher"
-        ".ecryptfs"
-        ".Private"
+        { directory = ".local/state/wireplumber"; method = "symlink"; } # restore audio volumes
+        { directory = ".local/share/docker"; method = "symlink"; }
+        { directory = ".config/discord"; method = "symlink"; } # "config"
+        { directory = ".mozilla"; method = "symlink"; }
+        { directory = ".config/VSCodium"; method = "symlink"; } # "config"
+        { directory = ".config/Code"; method = "symlink"; }
+        { directory = ".vscode"; method = "symlink"; }
+        { directory = ".vscode-oss"; method = "symlink"; }
+        { directory = ".steam"; method = "symlink"; }
+        { directory = ".local/share/Steam"; method = "symlink"; }
+        { directory = ".thunderbird"; method = "symlink"; }
+        { directory = ".config/chromium/"; method = "symlink"; }
+        { directory = ".config/easyeffects"; method = "symlink"; }
+        { directory = ".cargo"; method = "symlink"; }
+        # { directory = ".rustup"; method = "symlink"; }
+        { directory = ".local/share/tor-browser"; method = "symlink"; }
+        { directory = ".config/Signal"; method = "symlink"; }
+        { directory = ".local/share/flatpak/"; method = "symlink"; }
+        { directory = ".config/heroic/"; method = "symlink"; }
+        { directory = ".config/legendary"; method = "symlink"; }
+        { directory = ".local/share/godot"; method = "symlink"; }
+        { directory = ".config/godot"; method = "symlink"; }
+        { directory = "Games"; method = "symlink"; }
+        { directory = ".local/share/PrismLauncher"; method = "symlink"; }
+        { directory = ".ecryptfs"; method = "symlink"; }
+        { directory = ".Private"; method = "symlink"; }
         { directory = ".local/share/containers"; method = "symlink"; }
       ];
       files = [
