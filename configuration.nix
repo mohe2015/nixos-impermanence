@@ -13,6 +13,7 @@
       impermanence.nixosModules.impermanence
     ];
 
+  services.avahi.enable = true;
   #  services.beesd = {
   #    filesystems = {
   #      backup1 = {
@@ -54,9 +55,9 @@
 
   nix.settings.auto-optimise-store = true;
 
-  #virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "moritz" ];
-  # virtualisation.virtualbox.guest.enable = true; # broken
+  #virtualisation.virtualbox.guest.enable = true; # broken
   # virtualisation.virtualbox.guest.x11 = true; broken
 
 
@@ -106,7 +107,7 @@
   };
 
   # both kernels sometimes work
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.flatpak.enable = true;
 
