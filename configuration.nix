@@ -154,6 +154,8 @@
     "veracrypt"
   ];
 
+  programs.wireshark.enable = true;
+
   programs.steam.enable = false;
 
   home-manager.users.moritz = {
@@ -508,7 +510,7 @@
   users.users.moritz = {
     isNormalUser = true;
     description = "Moritz Hedtke";
-    extraGroups = [ "wheel" "docker" ];
+    extraGroups = [ "wheel" "docker" "wireshark" ];
     initialHashedPassword = "$6$sUGOG4y2bxFFFsKS$EwMnQ0.qI/BsLCuMZ17bWreafcHfFLr/LDdjHpVBIoLHCu93nZKJAiedmXYyn3vU6f9watzoOgmuBKJMn4U/f/";
   };
 
