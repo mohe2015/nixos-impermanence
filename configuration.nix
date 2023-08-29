@@ -113,6 +113,9 @@
 
   virtualisation.docker = {
     enable = true;
+    daemon.settings = {
+      seccomp = "unconfined"; # callgrind in docker
+    };
     listenOptions = [
       "/run/docker.sock"
       "0.0.0.0:2375"
