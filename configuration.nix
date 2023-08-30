@@ -13,6 +13,25 @@
       impermanence.nixosModules.impermanence
     ];
 
+systemd.services = {
+    /*
+     * https://www.freedesktop.org/software/systemd/man/systemd.exec.html#LogFilterPatterns=
+     * https://forum.manjaro.org/t/stable-update-2023-06-04-kernels-gnome-44-1-plasma-5-27-5-python-3-11-toolchain-firefox/141610/3
+     * do not log messages with the following regex
+     */
+    "user@" = {
+      overrideStrategy = "asDropin";
+      serviceConfig = {
+        LogFilterPatterns = [
+          #"~QML"
+          #"~QObject:"
+          #"~QFont::"
+          "~kwin_screencast: Dropping"
+        ];
+      };
+    };
+  };
+
   services.avahi.enable = true;
   #  services.beesd = {
   #    filesystems = {
@@ -37,7 +56,7 @@
       value = "52428800";
     }];
 
-  boot.supportedFilesystems = [ "ecryptfs" ];
+#  boot.supportedFilesystems = [ "ecryptfs" ];
 
   programs.fuse.userAllowOther = true;
 
@@ -53,7 +72,7 @@
     enableUserServices = true;
   };
 
-  nix.settings.auto-optimise-store = true;
+  #nix.settings.auto-optimise-store = true;
 
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "moritz" ];
@@ -69,16 +88,16 @@
   # For 32 bit applications
   hardware.opengl.driSupport32Bit = true;
 
-  hardware.opengl.extraPackages = with pkgs; [
-    rocm-opencl-icd
-    rocm-opencl-runtime
-  ];
+#  hardware.opengl.extraPackages = with pkgs; [
+#    rocm-opencl-icd
+#    rocm-opencl-runtime
+#  ];
 
   services.minio = {
-    enable = true;
+    enable = false;
   };
   services.gitlab-runner = {
-    enable = true;
+    enable = false;
     settings = {
       concurrent = 50;
     };
@@ -109,10 +128,10 @@
   # both kernels sometimes work
   #boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  services.flatpak.enable = true;
+  services.flatpak.enable = false;
 
   virtualisation.docker = {
-    enable = true;
+    enable = false;
     daemon.settings = {
       seccomp-profile = ./moby-seccomp-default.json; # callgrind in docker
     };
@@ -124,7 +143,7 @@
 
   virtualisation = {
     podman = {
-      enable = true;
+      enable = false;
       defaultNetwork.settings.dns_enabled = true;
     };
   };
@@ -139,7 +158,7 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  services.fwupd.enable = true;
+  services.fwupd.enable = false;
 
   nixpkgs.overlays = [ rust-overlay.overlays.default ];
 
@@ -193,7 +212,7 @@
         enable = true;
       };
       gpg.enable = true;
-      nix-index.enable = true;
+      nix-index.enable = false;
     };
 
     services.gpg-agent = {
@@ -203,64 +222,64 @@
     };
 
     home.packages = [
-      pkgs.btrfs-progs
-      pkgs.gparted
+      #pkgs.btrfs-progs
+      #pkgs.gparted
       #pkgs.valgrind
       #pkgs.gnuplot
-      pkgs.nixpkgs-fmt
+      #pkgs.nixpkgs-fmt
       pkgs.git
       #pkgs.gdb
       pkgs.firefox
       #pkgs.discord
       #pkgs.gimp
-      pkgs.libreoffice-fresh
+      #pkgs.libreoffice-fresh
       pkgs.thunderbird
       pkgs.vscode
       #pkgs.bubblewrap
-      pkgs.chromium
+      #pkgs.chromium
       #pkgs.tor-browser-bundle-bin
-      pkgs.texstudio
-      pkgs.texlive.combined.scheme-full
-      pkgs.signal-desktop
-      pkgs.xournalpp
-      (pkgs.rust-bin.stable.latest.default.override {
-        extensions = [ "rust-analyzer" "rust-src" ];
-        targets = [ "wasm32-unknown-unknown" ];
-      })
-      pkgs.wasm-pack
-      pkgs.wasm-bindgen-cli
-      pkgs.gcc
+      #pkgs.texstudio
+      #pkgs.texlive.combined.scheme-full
+      #pkgs.signal-desktop
+      #pkgs.xournalpp
+      #(pkgs.rust-bin.stable.latest.default.override {
+      #  extensions = [ "rust-analyzer" "rust-src" ];
+      #  targets = [ "wasm32-unknown-unknown" ];
+      #})
+      #pkgs.wasm-pack
+      #pkgs.wasm-bindgen-cli
+      #pkgs.gcc
       #pkgs.pdfgrep
-      pkgs.openjdk19
+      #pkgs.openjdk19
       #pkgs.lyx
       #pkgs.heroic
-      pkgs.vlc
+      #pkgs.vlc
       #pkgs.godot_4
       #pkgs.pympress
       pkgs.filelight
-      pkgs.yarn
-      pkgs.nodejs_latest
+      #pkgs.yarn
+      #pkgs.nodejs_latest
       #pkgs.sccache
-      pkgs.iotop
+      #pkgs.iotop
       pkgs.htop
-      pkgs.duperemove
-      pkgs.compsize
-      pkgs.androidStudioPackages.canary
-      pkgs.rpi-imager
-      pkgs.gh
-      pkgs.anki-bin
-      pkgs.xorg.xeyes
+      #pkgs.duperemove
+      #pkgs.compsize
+      #pkgs.androidStudioPackages.canary
+      #pkgs.rpi-imager
+      #pkgs.gh
+      #pkgs.anki-bin
+      #pkgs.xorg.xeyes
       #pkgs.kalendar
       #pkgs.libsForQt5.kdepim-addons
-      pkgs.fd
-      pkgs.file
-      pkgs.parted
-      pkgs.rnix-lsp
-      pkgs.nil
-      pkgs.nixd
-      pkgs.prismlauncher
-      pkgs.gnumake
-      pkgs.jq
+      #pkgs.fd
+      #pkgs.file
+      #pkgs.parted
+      #pkgs.rnix-lsp
+      #pkgs.nil
+      #pkgs.nixd
+      #pkgs.prismlauncher
+      #pkgs.gnumake
+      #pkgs.jq
     ];
 
     # /run/current-system/activate
@@ -404,13 +423,35 @@
 
   # Enable networking
   networking = {
+    useNetworkd = true;
     useDHCP = false;
   };
   systemd.network.enable = true;
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
   systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
+  systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
   systemd.network = {
     networks = {
+      "10-local" = {
+        matchConfig.Name = "enp5s0f3u1u1";
+        networkConfig = {
+          DHCP="no";
+          Address="10.42.0.1/24";
+          DHCPServer="yes";
+          IPForward="yes";
+          IPMasquerade="yes";
+        };
+        dhcpServerConfig = {
+          ServerAddress="10.42.0.1/24";
+          Router="10.42.0.1";
+        };
+        dhcpServerStaticLeases =  [{
+              dhcpServerStaticLeaseConfig = {
+          MACAddress="00:e0:4c:68:57:c8";
+          Address="10.42.0.120";
+        };
+        }];
+      };
       "20-enp" = {
         matchConfig.Name = "enp*";
         networkConfig.DHCP = "yes";
@@ -533,16 +574,16 @@
     5353 # mdns
   ];
   # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking.firewall.enable = false; # TODO FIXME
 
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  #boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-  virtualisation.libvirtd = {
-    enable = true;
-    qemu.ovmf.packages = [ pkgs.OVMFFull.fd nixpkgs.legacyPackages.aarch64-linux.OVMF.fd ];
-  };
+  #virtualisation.libvirtd = {
+  #  enable = true;
+  #  qemu.ovmf.packages = [ pkgs.OVMFFull.fd nixpkgs.legacyPackages.aarch64-linux.OVMF.fd ];
+  #};
   programs.dconf.enable = true;
-  environment.systemPackages = with pkgs; [ virt-manager ];
+  #environment.systemPackages = with pkgs; [ virt-manager ];
 
   environment.sessionVariables = {
     TZDIR = "/etc/zoneinfo";
