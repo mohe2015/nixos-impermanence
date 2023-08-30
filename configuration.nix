@@ -456,35 +456,14 @@ systemd.services = {
       "20-enp" = {
         matchConfig.Name = "enp*";
         networkConfig.DHCP = "yes";
-        dhcpV4Config = {
-          RouteMetric = 10;
-        };
-        ipv6AcceptRAConfig = {
-          RouteMetric = 10;
-        };
       };
       "25-wlp" = {
         matchConfig.Name = "wlp*";
-        networkConfig = {
-          DHCP = "yes";
-          DNS = "1.1.1.1";
-        };
-        dhcpV4Config = {
-          RouteMetric = 20;
-        };
-        ipv6AcceptRAConfig = {
-          RouteMetric = 20;
-        };
+        networkConfig.DHCP = "yes";
       };
       "25-bnep" = {
         matchConfig.Name = "bnep*";
         networkConfig.DHCP = "yes";
-        dhcpV4Config = {
-          RouteMetric = 20;
-        };
-        ipv6AcceptRAConfig = {
-          RouteMetric = 20;
-        };
       };
     };
   };
