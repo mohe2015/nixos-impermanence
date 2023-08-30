@@ -94,10 +94,11 @@ systemd.services = {
 #  ];
 
   services.minio = {
-    enable = false;
+    enable = true;
   };
   services.gitlab-runner = {
-    enable = false;
+    clear-docker-cache.enable = true;
+    enable = true;
     settings = {
       concurrent = 50;
     };
@@ -131,7 +132,7 @@ systemd.services = {
   services.flatpak.enable = false;
 
   virtualisation.docker = {
-    enable = false;
+    enable = true;
     daemon.settings = {
       seccomp-profile = ./moby-seccomp-default.json; # callgrind in docker
     };
