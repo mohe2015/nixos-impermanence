@@ -224,7 +224,7 @@ systemd.services = {
 
     home.packages = [
       #pkgs.btrfs-progs
-      #pkgs.gparted
+      pkgs.gparted
       #pkgs.valgrind
       #pkgs.gnuplot
       #pkgs.nixpkgs-fmt
@@ -240,7 +240,7 @@ systemd.services = {
       #pkgs.chromium
       #pkgs.tor-browser-bundle-bin
       #pkgs.texstudio
-      #pkgs.texlive.combined.scheme-full
+      pkgs.texlive.combined.scheme-full
       #pkgs.signal-desktop
       #pkgs.xournalpp
       #(pkgs.rust-bin.stable.latest.default.override {
@@ -266,7 +266,7 @@ systemd.services = {
       #pkgs.duperemove
       #pkgs.compsize
       #pkgs.androidStudioPackages.canary
-      #pkgs.rpi-imager
+      pkgs.rpi-imager
       #pkgs.gh
       #pkgs.anki-bin
       #pkgs.xorg.xeyes
@@ -281,6 +281,7 @@ systemd.services = {
       #pkgs.prismlauncher
       #pkgs.gnumake
       #pkgs.jq
+      pkgs.arp-scan
     ];
 
     # /run/current-system/activate
@@ -456,10 +457,14 @@ systemd.services = {
       "20-enp" = {
         matchConfig.Name = "enp*";
         networkConfig.DHCP = "yes";
+        networkConfig.LinkLocalAddressing = "ipv4";
+        networkConfig.IPv6AcceptRA = "no";
       };
       "25-wlp" = {
         matchConfig.Name = "wlp*";
         networkConfig.DHCP = "yes";
+        networkConfig.LinkLocalAddressing = "ipv4";
+        networkConfig.IPv6AcceptRA = "no";
       };
       "25-bnep" = {
         matchConfig.Name = "bnep*";
