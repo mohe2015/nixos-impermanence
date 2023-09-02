@@ -535,6 +535,10 @@
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
+    wireplumber = {
+      package = pkgs.wireplumber.override { pipewire = config.services.pipewire.package; };
+    };
+    package = pkgs.pipewire.override { libcameraSupport = false; };
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
