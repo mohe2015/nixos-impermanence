@@ -13,7 +13,9 @@
       impermanence.nixosModules.impermanence
     ];
 
-systemd.services = {
+  boot.blacklistedKernelModules = [ "hid_logitech_dj" ];
+
+  systemd.services = {
     /*
      * https://www.freedesktop.org/software/systemd/man/systemd.exec.html#LogFilterPatterns=
      * https://forum.manjaro.org/t/stable-update-2023-06-04-kernels-gnome-44-1-plasma-5-27-5-python-3-11-toolchain-firefox/141610/3
@@ -57,7 +59,7 @@ systemd.services = {
       value = "52428800";
     }];
 
-#  boot.supportedFilesystems = [ "ecryptfs" ];
+  #  boot.supportedFilesystems = [ "ecryptfs" ];
 
   programs.fuse.userAllowOther = true;
 
@@ -89,10 +91,10 @@ systemd.services = {
   # For 32 bit applications
   hardware.opengl.driSupport32Bit = true;
 
-#  hardware.opengl.extraPackages = with pkgs; [
-#    rocm-opencl-icd
-#    rocm-opencl-runtime
-#  ];
+  #  hardware.opengl.extraPackages = with pkgs; [
+  #    rocm-opencl-icd
+  #    rocm-opencl-runtime
+  #  ];
 
   services.minio = {
     enable = true;
@@ -228,7 +230,7 @@ systemd.services = {
       pkgs.gparted
       #pkgs.valgrind
       #pkgs.gnuplot
-      #pkgs.nixpkgs-fmt
+      pkgs.nixpkgs-fmt
       pkgs.git
       #pkgs.gdb
       pkgs.firefox
@@ -392,7 +394,7 @@ systemd.services = {
     userControlled.enable = true;
     scanOnLowSignal = false;
     fallbackToWPA2 = false;
-    
+
     environmentFile = "/nix/persistent/eduroam";
     networks = {
       eduroam = {
@@ -442,22 +444,22 @@ systemd.services = {
       "10-local" = {
         matchConfig.Name = "enp5s0f3u1u1";
         networkConfig = {
-          DHCP="no";
-          Address="10.42.0.1/24";
-          DHCPServer="yes";
-          IPForward="yes";
-          IPMasquerade="yes";
-          LLDP="no";
+          DHCP = "no";
+          Address = "10.42.0.1/24";
+          DHCPServer = "yes";
+          IPForward = "yes";
+          IPMasquerade = "yes";
+          LLDP = "no";
         };
         dhcpServerConfig = {
-          ServerAddress="10.42.0.1/24";
-          Router="10.42.0.1";
+          ServerAddress = "10.42.0.1/24";
+          Router = "10.42.0.1";
         };
-        dhcpServerStaticLeases =  [{
-              dhcpServerStaticLeaseConfig = {
-          MACAddress="00:e0:4c:68:57:c8";
-          Address="10.42.0.120";
-        };
+        dhcpServerStaticLeases = [{
+          dhcpServerStaticLeaseConfig = {
+            MACAddress = "00:e0:4c:68:57:c8";
+            Address = "10.42.0.120";
+          };
         }];
       };
       "20-enp" = {
@@ -465,14 +467,14 @@ systemd.services = {
         networkConfig.DHCP = "yes";
         networkConfig.LinkLocalAddressing = "ipv4";
         networkConfig.IPv6AcceptRA = "no";
-        networkConfig.LLDP="no";
+        networkConfig.LLDP = "no";
       };
       "25-wlp" = {
         matchConfig.Name = "wlp*";
         networkConfig.DHCP = "yes";
         networkConfig.LinkLocalAddressing = "ipv4";
         networkConfig.IPv6AcceptRA = "no";
-        networkConfig.LLDP="no";
+        networkConfig.LLDP = "no";
       };
       "25-bnep" = {
         matchConfig.Name = "bnep*";
