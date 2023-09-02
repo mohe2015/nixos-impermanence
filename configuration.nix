@@ -33,6 +33,7 @@ systemd.services = {
   };
 
   services.avahi.enable = true;
+  services.avahi.nssmdns = true;
   #  services.beesd = {
   #    filesystems = {
   #      backup1 = {
@@ -127,7 +128,7 @@ systemd.services = {
   };
 
   # both kernels sometimes work
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.flatpak.enable = false;
 
@@ -388,6 +389,10 @@ systemd.services = {
   networking.hostName = "nixos"; # Define your hostname.
   networking.wireless = {
     enable = true;
+    userControlled.enable = true;
+    scanOnLowSignal = false;
+    fallbackToWPA2 = false;
+    
     environmentFile = "/nix/persistent/eduroam";
     networks = {
       eduroam = {
@@ -442,6 +447,7 @@ systemd.services = {
           DHCPServer="yes";
           IPForward="yes";
           IPMasquerade="yes";
+          LLDP="no";
         };
         dhcpServerConfig = {
           ServerAddress="10.42.0.1/24";
@@ -459,12 +465,14 @@ systemd.services = {
         networkConfig.DHCP = "yes";
         networkConfig.LinkLocalAddressing = "ipv4";
         networkConfig.IPv6AcceptRA = "no";
+        networkConfig.LLDP="no";
       };
       "25-wlp" = {
         matchConfig.Name = "wlp*";
         networkConfig.DHCP = "yes";
         networkConfig.LinkLocalAddressing = "ipv4";
         networkConfig.IPv6AcceptRA = "no";
+        networkConfig.LLDP="no";
       };
       "25-bnep" = {
         matchConfig.Name = "bnep*";
