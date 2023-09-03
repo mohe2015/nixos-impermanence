@@ -101,6 +101,7 @@
   };
   services.gitlab-runner = {
     clear-docker-cache.enable = true;
+    clear-docker-cache.dates = "hourly";
     enable = true;
     settings = {
       concurrent = 50;
@@ -236,7 +237,7 @@
       pkgs.firefox
       #pkgs.discord
       #pkgs.gimp
-      #pkgs.libreoffice-fresh
+      pkgs.libreoffice-fresh
       pkgs.thunderbird
       pkgs.vscode
       #pkgs.bubblewrap
@@ -244,7 +245,7 @@
       #pkgs.tor-browser-bundle-bin
       #pkgs.texstudio
       pkgs.texlive.combined.scheme-full
-      #pkgs.signal-desktop
+      pkgs.signal-desktop
       #pkgs.xournalpp
       #(pkgs.rust-bin.stable.latest.default.override {
       #  extensions = [ "rust-analyzer" "rust-src" ];
@@ -254,7 +255,7 @@
       #pkgs.wasm-bindgen-cli
       #pkgs.gcc
       #pkgs.pdfgrep
-      #pkgs.openjdk19
+      pkgs.openjdk20
       #pkgs.lyx
       #pkgs.heroic
       #pkgs.vlc
@@ -282,7 +283,7 @@
       #pkgs.nil
       #pkgs.nixd
       #pkgs.prismlauncher
-      #pkgs.gnumake
+      pkgs.gnumake
       #pkgs.jq
       pkgs.arp-scan
     ];
