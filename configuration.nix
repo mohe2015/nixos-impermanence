@@ -104,7 +104,7 @@
     clear-docker-cache.dates = "hourly";
     enable = true;
     settings = {
-      concurrent = 50;
+      concurrent = 1;
     };
     services = {
       default = {
@@ -131,7 +131,7 @@
   };
 
   # both kernels sometimes work
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.flatpak.enable = false;
 
@@ -148,7 +148,7 @@
 
   virtualisation = {
     podman = {
-      enable = false;
+      enable = true;
       defaultNetwork.settings.dns_enabled = true;
     };
   };
@@ -163,7 +163,7 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  services.fwupd.enable = false;
+  services.fwupd.enable = true;
 
   nixpkgs.overlays = [ rust-overlay.overlays.default ];
 
@@ -237,6 +237,7 @@
       pkgs.firefox
       #pkgs.discord
       #pkgs.gimp
+      pkgs.hwloc
       pkgs.libreoffice-fresh
       pkgs.thunderbird
       pkgs.vscode
@@ -277,7 +278,7 @@
       #pkgs.kalendar
       #pkgs.libsForQt5.kdepim-addons
       #pkgs.fd
-      #pkgs.file
+      pkgs.file
       #pkgs.parted
       #pkgs.rnix-lsp
       #pkgs.nil
@@ -443,7 +444,7 @@
   systemd.network = {
     networks = {
       "10-local" = {
-        matchConfig.Name = "enp5s0f3u1u1";
+        matchConfig.Name = "enp1s0";
         networkConfig = {
           DHCP = "no";
           Address = "10.42.0.1/24";
