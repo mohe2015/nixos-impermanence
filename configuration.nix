@@ -13,6 +13,8 @@
       impermanence.nixosModules.impermanence
     ];
 
+xdg.portal.enable = true;
+
   boot.blacklistedKernelModules = [ "hid_logitech_dj" ];
 
   systemd.services = {
@@ -423,6 +425,18 @@
         auth = ''
           ssid="@A_SSID@"
           psk="@A_PASSWORD@"
+        '';
+      };
+      CCC = {
+        auth = ''
+          ssid="darmstadt.ccc.de"
+          key_mgmt=WPA-EAP
+          eap=TTLS
+          identity="random"
+          password="@CCC_PASSWORD@"
+          ca_cert="/etc/ssl/certs/ca-certificates.crt"
+          altsubject_match="DNS:radius.w17.io"
+          phase2="auth=PAP"
         '';
       };
     };
