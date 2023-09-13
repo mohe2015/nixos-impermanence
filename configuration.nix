@@ -106,7 +106,7 @@ xdg.portal.enable = true;
     clear-docker-cache.dates = "hourly";
     enable = true;
     settings = {
-      concurrent = 1;
+      concurrent = 3;
     };
     services = {
       default = {
@@ -162,6 +162,8 @@ xdg.portal.enable = true;
   nix.daemonCPUSchedPolicy = "idle";
   nix.daemonIOSchedClass = "idle";
   nix.daemonIOSchedPriority = 7;
+  systemd.services.nix-daemon.serviceConfig.CPUWeight = "idle";
+  systemd.services.nix-daemon.serviceConfig.IOWeight = "50";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -188,6 +190,8 @@ xdg.portal.enable = true;
   home-manager.users.moritz = {
     home.homeDirectory = "/home/moritz";
     imports = [ impermanence.nixosModules.home-manager.impermanence ];
+
+   xdg.enable = true;
 
     home.sessionVariables = {
       QT_QPA_PLATFORM = "wayland";
@@ -488,9 +492,9 @@ xdg.portal.enable = true;
       "25-wlp" = {
         matchConfig.Name = "wlp*";
         networkConfig.DHCP = "yes";
-        networkConfig.LinkLocalAddressing = "ipv4";
-        networkConfig.IPv6AcceptRA = "no";
-        networkConfig.LLDP = "no";
+        networkConfig.LinkLocalAddressing = "yes";
+        networkConfig.IPv6AcceptRA = "yes";
+        networkConfig.LLDP = "yes";
       };
       "25-bnep" = {
         matchConfig.Name = "bnep*";
