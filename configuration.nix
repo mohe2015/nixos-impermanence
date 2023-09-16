@@ -81,7 +81,7 @@ xdg.portal.enable = true;
 
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "moritz" ];
-  #virtualisation.virtualbox.guest.enable = true; # broken
+  virtualisation.virtualbox.guest.enable = true; # broken
   # virtualisation.virtualbox.guest.x11 = true; broken
 
 
@@ -253,7 +253,7 @@ xdg.portal.enable = true;
       #pkgs.texstudio
       pkgs.texlive.combined.scheme-full
       pkgs.signal-desktop
-      #pkgs.xournalpp
+      pkgs.xournalpp
       #(pkgs.rust-bin.stable.latest.default.override {
       #  extensions = [ "rust-analyzer" "rust-src" ];
       #  targets = [ "wasm32-unknown-unknown" ];
@@ -357,7 +357,7 @@ xdg.portal.enable = true;
       ];
     };
 
-    home.stateVersion = "23.05";
+    home.stateVersion = "23.11";
   };
 
   environment.persistence."/nix/persistent" = {
@@ -614,6 +614,6 @@ xdg.portal.enable = true;
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.05"; # Did you read the comment?
+  system.stateVersion = "23.11"; # Did you read the comment?
 
 }
