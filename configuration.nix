@@ -461,7 +461,7 @@ xdg.portal.enable = true;
   systemd.services.systemd-networkd.environment.SYSTEMD_LOG_LEVEL = "debug";
   systemd.network = {
     networks = {
-      "10-local" = {
+      /*"10-local" = {
         matchConfig.Name = "enp1s0";
         networkConfig = {
           DHCP = "no";
@@ -481,7 +481,7 @@ xdg.portal.enable = true;
             Address = "10.42.0.120";
           };
         }];
-      };
+      };*/
       "20-enp" = {
         matchConfig.Name = "enp*";
         networkConfig.DHCP = "yes";
