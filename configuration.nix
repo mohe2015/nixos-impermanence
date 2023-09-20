@@ -13,7 +13,9 @@
       impermanence.nixosModules.impermanence
     ];
 
-xdg.portal.enable = true;
+
+
+  xdg.portal.enable = true;
 
   boot.blacklistedKernelModules = [ "hid_logitech_dj" ];
 
@@ -191,7 +193,7 @@ xdg.portal.enable = true;
     home.homeDirectory = "/home/moritz";
     imports = [ impermanence.nixosModules.home-manager.impermanence ];
 
-   xdg.enable = true;
+    xdg.enable = true;
 
     home.sessionVariables = {
       QT_QPA_PLATFORM = "wayland";
@@ -455,6 +457,18 @@ xdg.portal.enable = true;
     useNetworkd = true;
     useDHCP = false;
   };
+  networking.nameservers = [ "9.9.9.9#dns.quad9.net" "149.112.112.112#dns.quad9.net" "2620:fe::fe#dns.quad9.net" "2620:fe::9#dns.quad9.net" ];
+
+  services.resolved = {
+    enable = true;
+    dnssec = "true";
+    domains = [ "~." ];
+    fallbackDns = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+    extraConfig = ''
+      DNSOverTLS=yes
+    '';
+  };
+
   systemd.network.enable = true;
   systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
   systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
