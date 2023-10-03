@@ -65,6 +65,8 @@
 
   #  boot.supportedFilesystems = [ "ecryptfs" ];
 
+  boot.supportedFilesystems = [ "bcachefs" ];
+
   programs.fuse.userAllowOther = true;
 
   zramSwap = {
@@ -81,9 +83,9 @@
 
   #nix.settings.auto-optimise-store = true;
 
-  virtualisation.virtualbox.host.enable = true;
+  #virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "moritz" ];
-  virtualisation.virtualbox.guest.enable = true; # broken
+  #virtualisation.virtualbox.guest.enable = true; # broken
   # virtualisation.virtualbox.guest.x11 = true; broken
 
 
@@ -106,7 +108,7 @@
   services.gitlab-runner = {
     clear-docker-cache.enable = true;
     clear-docker-cache.dates = "hourly";
-    enable = true;
+    enable = false;
     settings = {
       concurrent = 3;
     };
@@ -134,7 +136,6 @@
     };
   };
 
-  # both kernels sometimes work
   #boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.flatpak.enable = false;
@@ -250,7 +251,7 @@
       pkgs.thunderbird
       pkgs.vscode
       #pkgs.bubblewrap
-      #pkgs.chromium
+      pkgs.chromium
       #pkgs.tor-browser-bundle-bin
       #pkgs.texstudio
       pkgs.texlive.combined.scheme-full
@@ -333,7 +334,7 @@
         { directory = ".config/chromium/"; method = "symlink"; }
         { directory = ".config/easyeffects"; method = "symlink"; }
         { directory = ".cargo"; method = "symlink"; }
-        # { directory = ".rustup"; method = "symlink"; }
+        { directory = ".rustup"; method = "symlink"; }
         { directory = ".local/share/tor-browser"; method = "symlink"; }
         { directory = ".config/Signal"; method = "symlink"; }
         { directory = ".local/share/flatpak/"; method = "symlink"; }
@@ -499,9 +500,9 @@
       "20-enp" = {
         matchConfig.Name = "enp*";
         networkConfig.DHCP = "yes";
-        networkConfig.LinkLocalAddressing = "ipv4";
-        networkConfig.IPv6AcceptRA = "no";
-        networkConfig.LLDP = "no";
+        #networkConfig.LinkLocalAddressing = "ipv4";
+        #networkConfig.IPv6AcceptRA = "no";
+        #networkConfig.LLDP = "no";
       };
       "25-wlp" = {
         matchConfig.Name = "wlp*";
@@ -569,10 +570,10 @@
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
-    wireplumber = {
-      package = pkgs.wireplumber.override { pipewire = config.services.pipewire.package; };
-    };
-    package = pkgs.pipewire.override { libcameraSupport = false; };
+   # wireplumber = {
+   #   package = pkgs.wireplumber.override { pipewire = config.services.pipewire.package; };
+   # };
+   # package = pkgs.pipewire.override { libcameraSupport = false; };
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
